@@ -105,6 +105,10 @@ jobs:
   mcp-smoke:
     name: galaxy-mcp starts (uvx and Claude Desktop bundle)
     runs-on: ubuntu-latest
+    env:
+      # secrets cannot be referenced in a step `if`; expose it via job env instead
+      GALAXY_API_KEY: ${{ secrets.GALAXY_API_KEY }}
+      GALAXY_URL: ${{ vars.GALAXY_URL || 'https://usegalaxy.org' }}
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
@@ -116,10 +120,7 @@ jobs:
       - name: Bundle entry point (uv run)
         run: python3 scripts/mcp_smoke.py uv run --directory bundles/claude-desktop src/server.py
       - name: Live Galaxy check (only when the GALAXY_API_KEY secret is set)
-        if: ${{ secrets.GALAXY_API_KEY != '' }}
-        env:
-          GALAXY_URL: ${{ vars.GALAXY_URL || 'https://usegalaxy.org' }}
-          GALAXY_API_KEY: ${{ secrets.GALAXY_API_KEY }}
+        if: ${{ env.GALAXY_API_KEY != '' }}
         run: python3 scripts/mcp_smoke.py --live uvx galaxy-mcp
 
   claude-desktop-bundle:
