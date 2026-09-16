@@ -1,0 +1,37 @@
+{
+  "name": "galaxy-skills",
+  "version": "2026.9.16",
+  "description": "Curated Galaxy skills for coding agents: tool development, user-defined tools, Nextflow-to-Galaxy conversion, collection manipulation, workflow reports, track hubs, hub news posts and Galaxy MCP usage. Mirror of galaxyproject/galaxy-skills.",
+  "author": {
+    "name": "The Galaxy Project",
+    "url": "https://galaxyproject.org"
+  },
+  "homepage": "https://github.com/galaxyproject/galaxy-skills",
+  "repository": "https://github.com/galaxyproject/agentic-plugins",
+  "license": "MIT",
+  "keywords": [
+    "galaxy",
+    "bioinformatics",
+    "skills",
+    "tool-development",
+    "nextflow"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Galaxy Skills",
+    "shortDescription": "Curated Galaxy developer skills",
+    "longDescription": "Skills that teach an agent Galaxy best practices: writing and testing tool wrappers, authoring user-defined tools, converting Nextflow pipelines, manipulating dataset collections, drafting workflow reports and track hubs, and using the Galaxy MCP server. Mirrored from galaxyproject/galaxy-skills.",
+    "developerName": "The Galaxy Project",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://galaxyproject.org/",
+    "defaultPrompt": [
+      "Update the ncbi-datasets Galaxy tool to the latest version.",
+      "Convert this Nextflow process to a Galaxy tool.",
+      "Filter this Galaxy collection to samples matching a pattern."
+    ]
+  }
+}

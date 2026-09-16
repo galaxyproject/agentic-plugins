@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "galaxy": {
+      "command": "uvx",
+      "args": ["galaxy-mcp"]
+    }
+  }
+}

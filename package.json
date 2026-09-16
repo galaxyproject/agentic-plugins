@@ -1,0 +1,32 @@
+{
+  "name": "@galaxyproject/agentic-plugins",
+  "version": "2026.9.16",
+  "description": "Galaxy MCP server configuration and curated Galaxy skills for Pi and other AI coding agents",
+  "keywords": [
+    "pi-package",
+    "galaxy",
+    "bioinformatics",
+    "mcp",
+    "skills"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/galaxyproject/agentic-plugins",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/galaxyproject/agentic-plugins"
+  },
+  "pi": {
+    "skills": [
+      "./plugins/galaxy-mcp/skills",
+      "./plugins/galaxy-skills/skills",
+      "./plugins/galaxy-skills/skills/galaxy-integration/jupyterlite",
+      "./plugins/galaxy-skills/skills/galaxy-integration/mcp-reference",
+      "./plugins/galaxy-skills/skills/nf-to-galaxy/nf-pipeline-to-galaxy-workflow",
+      "./plugins/galaxy-skills/skills/nf-to-galaxy/nf-process-to-galaxy-tool",
+      "./plugins/galaxy-skills/skills/nf-to-galaxy/nf-subworkflow-to-galaxy-workflow",
+      "./plugins/galaxy-skills/skills/tool-dev/tool-selection-diagram",
+      "./plugins/foundry-skills/skills"
+    ],
+    "mcp": "./plugins/galaxy-mcp/mcp/pi.json"
+  }
+}

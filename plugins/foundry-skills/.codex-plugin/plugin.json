@@ -1,0 +1,37 @@
+{
+  "name": "foundry-skills",
+  "version": "2026.9.16",
+  "description": "Galaxy Workflow Foundry cast skills: schema-validated, corpus-grounded steps for turning papers, Nextflow pipelines and CWL workflows into validated Galaxy workflows. Mirror of galaxyproject/foundry (casts/claude/skills).",
+  "author": {
+    "name": "The Galaxy Project",
+    "url": "https://galaxyproject.org"
+  },
+  "homepage": "https://github.com/galaxyproject/foundry",
+  "repository": "https://github.com/galaxyproject/agentic-plugins",
+  "license": "MIT",
+  "keywords": [
+    "galaxy",
+    "workflows",
+    "foundry",
+    "skills",
+    "gxformat2"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Galaxy Workflow Foundry",
+    "shortDescription": "Build validated Galaxy workflows",
+    "longDescription": "Cast skills produced by the Galaxy Workflow Foundry: discover Tool Shed wrappers, summarise papers and pipelines, draft and validate gxformat2 workflows, author tool wrappers, and run workflow tests. Mirrored from galaxyproject/foundry.",
+    "developerName": "The Galaxy Project",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://galaxyproject.org/",
+    "defaultPrompt": [
+      "Build a Galaxy workflow from this Nextflow pipeline.",
+      "Find and pin a Galaxy Tool Shed wrapper.",
+      "Validate this Galaxy gxformat2 workflow."
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "name": "galaxy-mcp",
+  "version": "0.1.0",
+  "description": "Galaxy MCP server (galaxy-mcp) plus the galaxy-connect setup skill.",
+  "author": {
+    "name": "The Galaxy Project",
+    "url": "https://galaxyproject.org"
+  },
+  "homepage": "https://github.com/galaxyproject/agentic-plugins",
+  "repository": "https://github.com/galaxyproject/agentic-plugins",
+  "license": "MIT",
+  "keywords": [
+    "galaxy",
+    "bioinformatics",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": {
+    "galaxy": {
+      "command": "uvx",
+      "args": [
+        "galaxy-mcp"
+      ],
+      "env_vars": [
+        "GALAXY_URL",
+        "GALAXY_API_KEY"
+      ]
+    }
+  },
+  "interface": {
+    "displayName": "Galaxy MCP",
+    "shortDescription": "Talk to a Galaxy server from Codex",
+    "longDescription": "Runs the galaxy-mcp server (uvx galaxy-mcp) so Codex can list histories, search and run tools, upload data and invoke workflows on your Galaxy server. Reads GALAXY_URL and GALAXY_API_KEY from your environment.",
+    "developerName": "The Galaxy Project",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://galaxyproject.org/",
+    "defaultPrompt": [
+      "Connect to Galaxy and show my recent histories.",
+      "Find a Galaxy tool for read trimming and run it.",
+      "Check my Galaxy connection is working."
+    ]
+  }
+}

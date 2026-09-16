@@ -1,0 +1,48 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "galaxyproject",
+  "description": "Galaxy Project plugins for AI coding agents: the galaxy-mcp server plus curated Galaxy skills.",
+  "owner": {
+    "name": "The Galaxy Project",
+    "url": "https://galaxyproject.org"
+  },
+  "plugins": [
+    {
+      "name": "galaxy-mcp",
+      "source": "./plugins/galaxy-mcp",
+      "description": "Galaxy MCP server (galaxy-mcp via uvx) configured with your Galaxy URL and API key, plus the galaxy-connect setup skill.",
+      "version": "0.1.0",
+      "category": "productivity",
+      "keywords": [
+        "galaxy",
+        "bioinformatics",
+        "mcp"
+      ]
+    },
+    {
+      "name": "galaxy-skills",
+      "source": "./plugins/galaxy-skills",
+      "description": "Curated Galaxy skills (tool development, Nextflow conversion, collections, hub posts, ...) mirrored from galaxyproject/galaxy-skills.",
+      "version": "2026.9.16",
+      "category": "development",
+      "keywords": [
+        "galaxy",
+        "bioinformatics",
+        "skills"
+      ]
+    },
+    {
+      "name": "foundry-skills",
+      "source": "./plugins/foundry-skills",
+      "description": "Galaxy Workflow Foundry cast skills (paper/Nextflow/CWL to validated Galaxy workflows) mirrored from galaxyproject/foundry.",
+      "version": "2026.9.16",
+      "category": "development",
+      "keywords": [
+        "galaxy",
+        "workflows",
+        "foundry",
+        "skills"
+      ]
+    }
+  ]
+}

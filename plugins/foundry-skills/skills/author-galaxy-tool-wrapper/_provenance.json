@@ -1,0 +1,119 @@
+{
+  "provenance_schema_version": 4,
+  "cast_target": "claude",
+  "mold": {
+    "name": "author-galaxy-tool-wrapper",
+    "path": "content/molds/author-galaxy-tool-wrapper/index.md",
+    "revision": 5,
+    "content_hash": "cced8f068cd1ce81fefad23a62fdb4d52b3ce805b2231f64a7fe37f258bc1e09",
+    "commit": "ac92d2713fb01b07049027e584b8610e07c88d82"
+  },
+  "cast_at": "2026-09-16T14:18:33.900Z",
+  "cast_date": "2026-05-08",
+  "cast_revision": 1,
+  "cast_history": [
+    {
+      "rev": 1,
+      "date": "2026-05-08",
+      "note": "wire UDT prompt refs"
+    }
+  ],
+  "refs": [
+    {
+      "kind": "research",
+      "mode": "verbatim",
+      "ref": "[[component-nextflow-containers-and-envs]]",
+      "src": "content/research/component-nextflow-containers-and-envs/index.md",
+      "dst": "references/notes/component-nextflow-containers-and-envs.md",
+      "used_at": "runtime",
+      "load": "on-demand",
+      "evidence": "hypothesis",
+      "purpose": "Map Nextflow container/conda evidence to Galaxy UDT container and package provenance.",
+      "trigger": "When a missing Galaxy user-defined tool must be authored from a Nextflow process with container or conda directives.",
+      "verification": "Author one UDT from nf-core/bacass or nf-core/rnaseq process evidence and confirm the note improves requirements/container extraction.",
+      "src_hash": "8d0ee1e9be303348f56c63bdaf776ba36ef6802d9deb0db5ab6152913309c591",
+      "dst_hash": "8d0ee1e9be303348f56c63bdaf776ba36ef6802d9deb0db5ab6152913309c591",
+      "source": "deterministic"
+    },
+    {
+      "kind": "research",
+      "mode": "verbatim",
+      "ref": "[[component-nextflow-containers-and-envs]]",
+      "src": "content/research/component-nextflow-containers-and-envs/component-nextflow-containers-and-envs.yml",
+      "dst": "references/notes/component-nextflow-containers-and-envs.yml",
+      "used_at": "runtime",
+      "load": "on-demand",
+      "evidence": "hypothesis",
+      "purpose": "Map Nextflow container/conda evidence to Galaxy UDT container and package provenance.",
+      "trigger": "When a missing Galaxy user-defined tool must be authored from a Nextflow process with container or conda directives.",
+      "companion_of": "references/notes/component-nextflow-containers-and-envs.md",
+      "src_hash": "d82f7b3ec3d5b3dfd7de97da1425438a8edcd65dcca169e94ce5baf326a66e8e",
+      "dst_hash": "d82f7b3ec3d5b3dfd7de97da1425438a8edcd65dcca169e94ce5baf326a66e8e",
+      "source": "deterministic"
+    },
+    {
+      "kind": "research",
+      "mode": "verbatim",
+      "ref": "[[galaxy-user-tool-authoring]]",
+      "src": "content/research/galaxy-user-tool-authoring/index.md",
+      "dst": "references/notes/galaxy-user-tool-authoring.md",
+      "used_at": "runtime",
+      "load": "upfront",
+      "evidence": "corpus-observed",
+      "purpose": "Field contract, expression syntax, script placement, and package inference for a `GalaxyUserTool` definition.",
+      "src_hash": "365fad455369945a34bda537c8dbf409a0966f0f88da9fe78b61cff32d5b0d0d",
+      "dst_hash": "365fad455369945a34bda537c8dbf409a0966f0f88da9fe78b61cff32d5b0d0d",
+      "source": "deterministic"
+    },
+    {
+      "kind": "research",
+      "mode": "verbatim",
+      "ref": "[[galaxy-user-tool-critique]]",
+      "src": "content/research/galaxy-user-tool-critique/index.md",
+      "dst": "references/notes/galaxy-user-tool-critique.md",
+      "used_at": "runtime",
+      "load": "on-demand",
+      "evidence": "corpus-observed",
+      "purpose": "Clarity and idiomaticity criteria, and the text-versus-structural test for each proposed fix.",
+      "trigger": "After the drafted `GalaxyUserTool` passes structural validation and before emitting `galaxy-user-tool.yml`.",
+      "src_hash": "94b047cc268b0f788e8d596b9e809b4764c68b94e8bd4f819c2f9af59d559a11",
+      "dst_hash": "94b047cc268b0f788e8d596b9e809b4764c68b94e8bd4f819c2f9af59d559a11",
+      "source": "deterministic"
+    },
+    {
+      "kind": "schema",
+      "mode": "verbatim",
+      "ref": "[[summary-nextflow]]",
+      "src": "package://@galaxy-foundry/summarize-nextflow#summaryNextflowSchema",
+      "dst": "references/schemas/summary-nextflow.schema.json",
+      "used_at": "runtime",
+      "load": "upfront",
+      "evidence": "corpus-observed",
+      "purpose": "Read process tool, container, conda, inputs, outputs, script summary, and test fixture evidence from the source pipeline summary.",
+      "license": "MIT",
+      "src_hash": "6489309caa1d8f96c457cbc7da03d8a3fd5b5a873989e917b5e09080ff101527",
+      "dst_hash": "6489309caa1d8f96c457cbc7da03d8a3fd5b5a873989e917b5e09080ff101527",
+      "source": "deterministic"
+    }
+  ],
+  "artifacts": {
+    "produces": [
+      {
+        "id": "galaxy-user-tool-definition",
+        "kind": "yaml",
+        "default_filename": "galaxy-user-tool.yml",
+        "description": "Galaxy `GalaxyUserTool` YAML definition for a tool not present on the Tool Shed."
+      }
+    ],
+    "consumes": [
+      {
+        "id": "summary-nextflow",
+        "description": "Source pipeline summary from [[summarize-nextflow]]; provides process command, inputs, outputs, and container or conda evidence for UDT authoring.",
+        "inherited_schema": "[[summary-nextflow]]",
+        "producers": [
+          "summarize-nextflow"
+        ]
+      }
+    ]
+  }
+}

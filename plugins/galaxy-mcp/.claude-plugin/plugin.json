@@ -1,0 +1,30 @@
+{
+  "name": "galaxy-mcp",
+  "version": "0.1.0",
+  "description": "Galaxy MCP server (galaxy-mcp) preconfigured with your Galaxy URL and API key, plus the galaxy-connect skill for setup, verification and troubleshooting.",
+  "author": {
+    "name": "The Galaxy Project",
+    "url": "https://galaxyproject.org"
+  },
+  "homepage": "https://github.com/galaxyproject/agentic-plugins",
+  "repository": "https://github.com/galaxyproject/agentic-plugins",
+  "license": "MIT",
+  "keywords": ["galaxy", "bioinformatics", "mcp"],
+  "mcpServers": "./mcp/claude.json",
+  "userConfig": {
+    "galaxy_url": {
+      "type": "string",
+      "title": "Galaxy URL",
+      "description": "Base URL of the Galaxy server to connect to, e.g. https://usegalaxy.org",
+      "default": "https://usegalaxy.org",
+      "required": true
+    },
+    "galaxy_api_key": {
+      "type": "string",
+      "title": "Galaxy API key",
+      "description": "Your API key for that server (Galaxy: User > Preferences > Manage API Key)",
+      "sensitive": true,
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "tool": "cwl-utils",
+    "origin": "pypi",
+    "package": "cwl-utils",
+    "invoke": "cwl-normalizer",
+    "invoke_fallback": "uvx --from cwl-utils cwl-normalizer",
+    "availability_check": "cwl-normalizer --help",
+    "docs_url": "https://github.com/common-workflow-language/cwl-utils",
+    "reference": "references/cli/cwl-utils.md",
+    "source": "referenced"
+  },
+  {
+    "tool": "cwltool",
+    "origin": "pypi",
+    "package": "cwltool",
+    "invoke": "cwltool",
+    "invoke_fallback": "uvx cwltool",
+    "availability_check": "cwltool --version",
+    "docs_url": "https://cwltool.readthedocs.io/",
+    "reference": "references/cli/cwltool.md",
+    "source": "referenced"
+  },
+  {
+    "tool": "foundry",
+    "origin": "npm",
+    "package": "@galaxy-foundry/gxwf-foundry",
+    "invoke": "foundry",
+    "invoke_fallback": "npx --package @galaxy-foundry/gxwf-foundry foundry",
+    "availability_check": "foundry --help",
+    "docs_url": "https://github.com/galaxyproject/foundry/blob/main/packages/gxwf-foundry/README.md",
+    "reference": "references/cli/foundry.md",
+    "source": "referenced"
+  }
+]

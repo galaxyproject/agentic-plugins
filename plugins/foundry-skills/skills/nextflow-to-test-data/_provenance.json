@@ -1,0 +1,118 @@
+{
+  "provenance_schema_version": 4,
+  "cast_target": "claude",
+  "mold": {
+    "name": "nextflow-to-test-data",
+    "path": "content/molds/nextflow-to-test-data/index.md",
+    "revision": 2,
+    "content_hash": "5569467ca2b1bb6bdaec69f4d6a9482b111b4433d5a70f1bf19c29a8d511f3ca",
+    "commit": "ac92d2713fb01b07049027e584b8610e07c88d82"
+  },
+  "cast_at": "2026-09-16T14:18:37.444Z",
+  "refs": [
+    {
+      "kind": "research",
+      "mode": "verbatim",
+      "ref": "[[component-nextflow-testing]]",
+      "src": "content/research/component-nextflow-testing/index.md",
+      "dst": "references/notes/component-nextflow-testing.md",
+      "used_at": "runtime",
+      "load": "on-demand",
+      "evidence": "hypothesis",
+      "purpose": "Interpret nf-test profiles and fixture conventions before mapping declared fixtures onto Galaxy inputs.",
+      "trigger": "When reading `test_fixtures` / `nf_tests` to decide which profile's fixtures best cover the workflow inputs.",
+      "verification": "Map nf-core/bacass declared fixtures onto its Galaxy interface and confirm this note improves profile/fixture selection.",
+      "src_hash": "b3f6dd5de325f8b9d85cc597b928df70b9f842eb2d1d2652aa68bde8e2c325c7",
+      "dst_hash": "b3f6dd5de325f8b9d85cc597b928df70b9f842eb2d1d2652aa68bde8e2c325c7",
+      "source": "deterministic"
+    },
+    {
+      "kind": "research",
+      "mode": "verbatim",
+      "ref": "[[component-nextflow-testing]]",
+      "src": "content/research/component-nextflow-testing/component-nextflow-testing.yml",
+      "dst": "references/notes/component-nextflow-testing.yml",
+      "used_at": "runtime",
+      "load": "on-demand",
+      "evidence": "hypothesis",
+      "purpose": "Interpret nf-test profiles and fixture conventions before mapping declared fixtures onto Galaxy inputs.",
+      "trigger": "When reading `test_fixtures` / `nf_tests` to decide which profile's fixtures best cover the workflow inputs.",
+      "companion_of": "references/notes/component-nextflow-testing.md",
+      "src_hash": "7d4da038c82a7da9b4abf4a6cdd8480f73a235e155c8d9763d6bd3826acf818e",
+      "dst_hash": "7d4da038c82a7da9b4abf4a6cdd8480f73a235e155c8d9763d6bd3826acf818e",
+      "source": "deterministic"
+    },
+    {
+      "kind": "research",
+      "mode": "verbatim",
+      "ref": "[[galaxy-workflow-testability-design]]",
+      "src": "content/research/galaxy-workflow-testability-design/index.md",
+      "dst": "references/notes/galaxy-workflow-testability-design.md",
+      "used_at": "runtime",
+      "load": "on-demand",
+      "evidence": "corpus-observed",
+      "purpose": "Map each declared fixture to an addressable Galaxy input label and the collection shape it must populate.",
+      "trigger": "When mapping a declared fixture (often a samplesheet-driven input) onto a Galaxy input's collection shape.",
+      "src_hash": "81b01801ec3d14810d570dd2d7815da2bb11e41a562af9182c29fd2974f4b855",
+      "dst_hash": "81b01801ec3d14810d570dd2d7815da2bb11e41a562af9182c29fd2974f4b855",
+      "source": "deterministic"
+    },
+    {
+      "kind": "research",
+      "mode": "verbatim",
+      "ref": "[[iwc-test-data-conventions]]",
+      "src": "content/research/iwc-test-data-conventions/index.md",
+      "dst": "references/notes/iwc-test-data-conventions.md",
+      "used_at": "runtime",
+      "load": "on-demand",
+      "evidence": "corpus-observed",
+      "purpose": "Express each ref remote-URL-first with SHA-1 integrity and per-input collection layout when recording resolved fixtures.",
+      "trigger": "When writing each `test-data-refs` entry.",
+      "src_hash": "1921e939703444604440e0768caca6e6b834a73dcfa964f450fa081143e008d3",
+      "dst_hash": "1921e939703444604440e0768caca6e6b834a73dcfa964f450fa081143e008d3",
+      "source": "deterministic"
+    },
+    {
+      "kind": "schema",
+      "mode": "verbatim",
+      "ref": "[[summary-nextflow]]",
+      "src": "package://@galaxy-foundry/summarize-nextflow#summaryNextflowSchema",
+      "dst": "references/schemas/summary-nextflow.schema.json",
+      "used_at": "runtime",
+      "load": "upfront",
+      "evidence": "corpus-observed",
+      "purpose": "Input contract: read the selected profile's `test_fixtures.inputs[]` and the `nf_tests[]` enumeration — role, url/path, sha1, filetype — as the declared source of test data.",
+      "license": "MIT",
+      "src_hash": "6489309caa1d8f96c457cbc7da03d8a3fd5b5a873989e917b5e09080ff101527",
+      "dst_hash": "6489309caa1d8f96c457cbc7da03d8a3fd5b5a873989e917b5e09080ff101527",
+      "source": "deterministic"
+    }
+  ],
+  "artifacts": {
+    "produces": [
+      {
+        "id": "test-data-refs",
+        "kind": "json",
+        "default_filename": "test-data-refs.json",
+        "description": "Test data resolved from the pipeline's declared fixtures, expressed as URLs/paths plus expected shapes for downstream test authoring. Shared id with [[find-test-data]] — the branch's search fallback fills only the inputs this Mold leaves unresolved."
+      }
+    ],
+    "consumes": [
+      {
+        "id": "summary-nextflow",
+        "description": "Structured Nextflow summary from [[summarize-nextflow]]; carries the selected profile's `test_fixtures` and the full `nf_tests[]` enumeration — each declared input a role plus url/path, sha1, and filetype.",
+        "inherited_schema": "[[summary-nextflow]]",
+        "producers": [
+          "summarize-nextflow"
+        ]
+      },
+      {
+        "id": "nextflow-galaxy-interface",
+        "description": "Galaxy interface brief from [[nextflow-summary-to-galaxy-interface]] pinning the workflow input labels, collection shapes, and datatypes each resolved fixture must map onto.",
+        "producers": [
+          "nextflow-summary-to-galaxy-interface"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "name": "galaxy-mcp",
+  "description": "Galaxy MCP server (galaxy-mcp) plus the galaxy-connect setup skill. Reads GALAXY_URL and GALAXY_API_KEY from your environment."
+}

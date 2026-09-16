@@ -1,0 +1,4 @@
+{
+  "name": "foundry-skills",
+  "description": "Galaxy Workflow Foundry cast skills: schema-validated, corpus-grounded steps for turning papers, Nextflow pipelines and CWL workflows into validated Galaxy workflows. Mirror of galaxyproject/foundry (casts/claude/skills)."
+}
