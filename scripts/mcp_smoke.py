@@ -69,7 +69,14 @@ def main() -> int:
             text = "".join(c.get("text", "") for c in res.get("content", []))
             if res.get("isError"):
                 sys.exit(f"get_user failed: {text[:500]}")
-            print(f"get_user: {text[:300]}")
+            # Print only the username: CI logs may be public, and the payload carries the email.
+            try:
+                username = json.loads(text).get("data", {}).get("username")
+            except json.JSONDecodeError:
+                username = None
+            if not username:
+                sys.exit("get_user returned no username")
+            print(f"get_user: connected as {username}")
         print("smoke OK")
         return 0
     finally:
