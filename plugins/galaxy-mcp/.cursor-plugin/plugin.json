@@ -1,0 +1,13 @@
+{
+  "name": "galaxy-mcp",
+  "version": "0.1.0",
+  "description": "Galaxy MCP server (uvx galaxy-mcp) plus the galaxy-connect setup skill. Reads GALAXY_URL and GALAXY_API_KEY from your environment.",
+  "author": {
+    "name": "The Galaxy Project"
+  },
+  "homepage": "https://galaxyproject.org",
+  "repository": "https://github.com/galaxyproject/agentic-plugins",
+  "license": "MIT",
+  "keywords": ["galaxy", "bioinformatics", "mcp"],
+  "mcpServers": "./mcp.json"
+}

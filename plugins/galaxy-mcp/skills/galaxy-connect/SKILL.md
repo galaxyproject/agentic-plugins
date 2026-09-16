@@ -51,6 +51,8 @@ How the environment reaches the server depends on the harness:
 | Codex CLI | `GALAXY_URL` and `GALAXY_API_KEY` exported in the shell that starts Codex (the plugin forwards exactly these two variables). Or `codex mcp add galaxy --env GALAXY_URL=... --env GALAXY_API_KEY=... -- uvx galaxy-mcp`. |
 | Antigravity (`agy`) | Variables exported in the shell that starts `agy` (the server inherits the environment). Or `agy mcp add --env GALAXY_URL=... --env GALAXY_API_KEY=... galaxy uvx galaxy-mcp`. |
 | Pi (`pi-mcp-adapter`) | Variables exported in the shell that starts `pi`. |
+| Cursor | `${env:GALAXY_URL}` / `${env:GALAXY_API_KEY}` in `mcp.json`, read from the environment Cursor was started with; or `envFile` in a project `.cursor/mcp.json`. |
+| Claude Desktop (bundle) | Values entered when the extension was installed; change them under Settings > Extensions > Galaxy > Configure. |
 | Any harness | A `.env` file in the project directory containing `GALAXY_URL=...` and `GALAXY_API_KEY=...` (add `.env` to `.gitignore`). |
 
 Shell example (add to `~/.zshrc` or `~/.bashrc`, then open a new terminal):

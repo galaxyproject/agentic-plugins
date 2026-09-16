@@ -16,7 +16,9 @@ Plugins and setup guides that connect AI coding agents to
 | Harness | Guide | Install in one line |
 |---------|-------|---------------------|
 | Claude Code | [docs/claude-code.md](docs/claude-code.md) | `/plugin marketplace add galaxyproject/agentic-plugins` then `/plugin install galaxy-mcp@galaxyproject` |
+| Claude Desktop | [docs/claude-desktop.md](docs/claude-desktop.md) | Open `galaxy-mcp.mcpb` from the [latest release](https://github.com/galaxyproject/agentic-plugins/releases/latest) |
 | Codex CLI | [docs/codex.md](docs/codex.md) | `codex plugin marketplace add galaxyproject/agentic-plugins` then `codex plugin add galaxy-mcp@galaxyproject` |
+| Cursor | [docs/cursor.md](docs/cursor.md) | Customize > From GitHub Repository > `galaxyproject/agentic-plugins`, or the one-click MCP link in the guide |
 | Antigravity (`agy`) | [docs/antigravity.md](docs/antigravity.md) | `git clone` this repo, then `agy plugin install <clone>/plugins/galaxy-mcp` |
 | Pi | [docs/pi.md](docs/pi.md) | `pi install npm:pi-mcp-adapter` then `pi install git:github.com/galaxyproject/agentic-plugins` |
 
@@ -26,12 +28,14 @@ Every guide starts with [getting a Galaxy API key](docs/galaxy-api-key.md).
 
 Three plugins live under `plugins/`. Each directory is simultaneously a Claude
 Code plugin (`.claude-plugin/plugin.json`), a Codex plugin
-(`.codex-plugin/plugin.json`) and an Antigravity plugin (`plugin.json`); the
-root `package.json` exposes the same directories as a Pi package.
+(`.codex-plugin/plugin.json`), a Cursor plugin (`.cursor-plugin/plugin.json`)
+and an Antigravity plugin (`plugin.json`); the root `package.json` exposes the
+same directories as a Pi package. `bundles/claude-desktop/` is a separate
+one-click installer for Claude Desktop (MCP server only).
 
 | Plugin | Contents | Origin |
 |--------|----------|--------|
-| `galaxy-mcp` | MCP server config for `uvx galaxy-mcp` (`mcp/claude.json`, `mcp/pi.json`, `mcp_config.json` for Antigravity, inline in the Codex manifest) and the `galaxy-connect` skill: set up, verify and troubleshoot the connection | this repo |
+| `galaxy-mcp` | MCP server config for `uvx galaxy-mcp` (`mcp/claude.json`, `mcp/pi.json`, `mcp.json` for Cursor, `mcp_config.json` for Antigravity, inline in the Codex manifest) and the `galaxy-connect` skill: set up, verify and troubleshoot the connection | this repo |
 | `galaxy-skills` | 16 skills: `tool-dev`, `udt-authoring`, `nf-to-galaxy` (+3 sub-skills), `collection-manipulation`, `galaxy-integration` (+2 sub-skills), `reproduciblify`, `workflow-reports`, `trackhubs`, `update-usegalaxy-tool`, `hub-news-posts`, `tool-selection-diagram` | mirror of galaxyproject/galaxy-skills |
 | `foundry-skills` | 59 cast skills, e.g. `pipeline-nextflow-to-galaxy`, `discover-shed-tool`, `validate-galaxy-workflow`, `author-galaxy-tool-wrapper` | mirror of galaxyproject/foundry `casts/claude/skills` |
 
@@ -49,27 +53,35 @@ is why the plugin ships one MCP file per harness:
 |---------|-----------|
 | Claude Code | Prompted at install time (`userConfig`), stored in the keychain, injected via `${user_config.*}` |
 | Codex CLI | Only allow-listed variables are forwarded; the Codex manifest lists the two (`env_vars`) |
+| Cursor | `${env:GALAXY_URL}` / `${env:GALAXY_API_KEY}` interpolated from the environment in `mcp.json` |
 | Antigravity | Shell environment inherited as-is; `${VAR}` in `mcp_config.json` is not expanded |
 | Pi | `pi-mcp-adapter` inherits the shell environment |
+| Claude Desktop | Prompted at install time (bundle `user_config`), stored in the keychain |
 
 ## Repository layout
 
 ```
 .claude-plugin/marketplace.json   Claude Code marketplace "galaxyproject"
 .agents/plugins/marketplace.json  Codex marketplace "galaxyproject"
+.cursor-plugin/marketplace.json   Cursor marketplace "galaxyproject"
 package.json                      Pi package manifest (pi.skills, pi.mcp)
 plugins/
   galaxy-mcp/                     MCP config + galaxy-connect skill (hand-written)
   galaxy-skills/                  vendored copy of galaxyproject/galaxy-skills
   foundry-skills/                 vendored copy of galaxyproject/foundry casts/claude/skills
+bundles/claude-desktop/           Claude Desktop .mcpb source (uv runtime, no bundled code)
 docs/                             per-harness guides (source for the Galaxy Hub pages)
 scripts/
   sync-skills.sh                  re-vendor upstream skills, regenerate manifests, validate
   gen-manifests.py                writes generated manifest fields (nested skill lists, versions)
   validate.py                     structural checks (run in CI)
-.github/workflows/
-  validate.yml                    validate.py + `claude plugin validate --strict`
-  sync-skills.yml                 weekly sync that opens a pull request
+  mcp_smoke.py                    starts galaxy-mcp over stdio and checks its tool list
+  cursor-deeplink.py              generates / checks the "Add to Cursor" link in docs
+.github/
+  ci-tools/                       CI-only npm deps (Pi loader check); not part of the Pi package
+  workflows/validate.yml          per-harness CI jobs (see Testing)
+  workflows/release.yml           packs the .mcpb and attaches it to tagged releases
+  workflows/sync-skills.yml       weekly sync that opens a pull request
 ```
 
 ## Why vendor the skills?
@@ -78,10 +90,47 @@ Each harness installs plugins by cloning or copying a directory. None of
 them is documented to follow git submodules (Pi runs a plain `git clone`),
 Claude Code discovers plugin skills only one level deep, Pi stops recursing at a skill root, and Pi can
 only install packages that carry a manifest. Vendoring a plain copy is the one
-layout that works for all four; `scripts/gen-manifests.py` lists nested skills
-explicitly where a harness needs it. The pinned upstream commit is recorded in
+layout that works everywhere; `scripts/gen-manifests.py` lists nested skills
+explicitly where a harness needs it. The Antigravity `plugin.json` at each
+plugin root must never carry an agent-plugins.org `$schema`: Codex and Cursor
+would then read it as an Agent Plugins manifest instead of their own
+(`validate.py` enforces this). The pinned upstream commit is recorded in
 each mirror's `UPSTREAM.json`, and the mirror plugins are versioned by sync
 date (`YYYY.M.D`).
+
+## Testing
+
+Everything a harness does with these files is deterministic except the model
+itself, so CI checks the loaders rather than the models. `validate.yml` runs
+one job per harness on every push and pull request; none of them needs an API
+key or a login:
+
+| Job | What it proves |
+|-----|----------------|
+| `structure` | `validate.py`: manifests parse, marketplaces match `plugins/`, every SKILL.md has frontmatter, nested skill lists and versions are regenerated, the Cursor deeplink in the docs is current |
+| `claude-code` | `claude plugin validate --strict` on the marketplace and each plugin |
+| `codex` | Codex's own plugin validator; then, with an isolated `CODEX_HOME`, installs all three plugins from the checkout as a local marketplace, checks `codex mcp list` shows `galaxy`, and reads the model-visible prompt with `codex debug prompt-input` to assert the skills are listed |
+| `antigravity` | installs `agy` and runs `agy plugin validate` on each plugin |
+| `pi` | loads every `pi.skills` root with Pi's own `loadSkillsFromDir` and checks the expected skills, no duplicates |
+| `mcp-smoke` | starts `uvx galaxy-mcp` and the Claude Desktop bundle's `uv run` entry point over stdio, completes the MCP handshake and checks the core tools exist; with a `GALAXY_API_KEY` repository secret it also calls `get_user` against a live server |
+| `claude-desktop-bundle` | `mcpb validate` + `mcpb pack`, uploaded as a build artifact |
+
+What CI does not cover, by design: whether a model picks the right skill. That
+needs a model call and a key. To add it later, the same commands used for
+manual checks work headlessly: `claude --plugin-dir plugins/galaxy-skills -p
+"list your skills"` with `ANTHROPIC_API_KEY`, and `codex exec -m <model>` with
+an OpenAI key. `claude plugin eval` can grade such runs if a suite is written
+under `evals/`.
+
+Local equivalent of the whole matrix:
+
+```bash
+python3 scripts/validate.py
+claude plugin validate --strict . && for p in plugins/*/; do claude plugin validate --strict "$p"; done
+for p in plugins/*/; do agy plugin validate "$p"; done
+python3 scripts/mcp_smoke.py
+npx @anthropic-ai/mcpb validate bundles/claude-desktop/manifest.json
+```
 
 ## Maintaining
 

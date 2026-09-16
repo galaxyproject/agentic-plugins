@@ -94,11 +94,24 @@ def main() -> int:
     mp_names = {e["name"] for e in claude_mp.get("plugins", [])}
     if mp_names != names:
         err(f"claude marketplace lists {sorted(mp_names)} but plugins/ has {sorted(names)}")
+    cursor_mp = load(ROOT / ".cursor-plugin" / "marketplace.json") or {}
+    for entry in cursor_mp.get("plugins", []):
+        src = str(entry["source"])
+        if src.startswith("./") or src.startswith("/") or ".." in src:
+            err(f"cursor marketplace: {entry['name']} source must be a plain relative path (got {src})")
+        pdir = ROOT / src
+        man = load(pdir / ".cursor-plugin" / "plugin.json") or {}
+        if man.get("name") != entry["name"]:
+            err(f"cursor marketplace: entry {entry['name']} vs .cursor-plugin/plugin.json name {man.get('name')}")
+        if man.get("version") != entry.get("version"):
+            err(f"cursor marketplace: {entry['name']} version {entry.get('version')} != plugin.json {man.get('version')}")
+    if {e["name"] for e in cursor_mp.get("plugins", [])} != names:
+        err("cursor marketplace does not list exactly the plugins/ directories")
 
     # Plugins
     for pdir in plugin_dirs:
         rel = pdir.relative_to(ROOT)
-        for manifest in (".claude-plugin/plugin.json", ".codex-plugin/plugin.json", "plugin.json"):
+        for manifest in (".claude-plugin/plugin.json", ".codex-plugin/plugin.json", ".cursor-plugin/plugin.json", "plugin.json"):
             if not (pdir / manifest).is_file():
                 err(f"{rel}: missing {manifest}")
         if (pdir / ".mcp.json").exists():
@@ -123,8 +136,13 @@ def main() -> int:
                     err(f"{rel}: {mcp_key} file {ref} missing")
         for f in pdir.glob("mcp/*.json"):
             load(f)
-        if (pdir / "mcp_config.json").exists():
-            load(pdir / "mcp_config.json")
+        for name in ("mcp_config.json", "mcp.json"):
+            if (pdir / name).exists():
+                load(pdir / name)
+        cursor = load(pdir / ".cursor-plugin" / "plugin.json") or {}
+        ref = cursor.get("mcpServers")
+        if isinstance(ref, str) and not (pdir / ref).is_file():
+            err(f"{rel}/.cursor-plugin/plugin.json: mcpServers file {ref} missing")
 
         skills_root = pdir / "skills"
         skill_mds = sorted(skills_root.rglob("SKILL.md")) if skills_root.is_dir() else []
@@ -143,6 +161,21 @@ def main() -> int:
             if not up or "commit" not in up:
                 err(f"{rel}: UPSTREAM.json missing or incomplete")
 
+    # Claude Desktop bundle
+    bdir = ROOT / "bundles" / "claude-desktop"
+    bman = load(bdir / "manifest.json") or {}
+    if bman.get("server", {}).get("type") != "uv":
+        err("bundles/claude-desktop/manifest.json: server.type must be 'uv'")
+    for f in ("pyproject.toml", bman.get("server", {}).get("entry_point", "src/server.py"), ".mcpbignore"):
+        if not (bdir / f).is_file():
+            err(f"bundles/claude-desktop: missing {f}")
+    gm = load(PLUGINS / "galaxy-mcp" / ".claude-plugin" / "plugin.json") or {}
+    if bman.get("version") != gm.get("version"):
+        err(f"bundle version {bman.get('version')} != galaxy-mcp plugin version {gm.get('version')}")
+    for key in ("galaxy_url", "galaxy_api_key"):
+        if key not in bman.get("user_config", {}):
+            err(f"bundles/claude-desktop/manifest.json: user_config lacks {key}")
+
     # Pi package
     for entry in pkg.get("pi", {}).get("skills", []):
         p = ROOT / entry
@@ -157,7 +190,9 @@ def main() -> int:
     # Generated manifests up to date?
     before = {p: p.read_text() for p in [
         ROOT / "package.json", ROOT / ".claude-plugin" / "marketplace.json",
+        ROOT / ".cursor-plugin" / "marketplace.json", ROOT / "bundles" / "claude-desktop" / "manifest.json",
         *ROOT.glob("plugins/*/.claude-plugin/plugin.json"), *ROOT.glob("plugins/*/.codex-plugin/plugin.json"),
+        *ROOT.glob("plugins/*/.cursor-plugin/plugin.json"),
     ]}
     subprocess.run([sys.executable, str(ROOT / "scripts" / "gen-manifests.py")], check=True, capture_output=True)
     for p, text in before.items():

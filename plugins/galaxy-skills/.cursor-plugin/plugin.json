@@ -1,0 +1,18 @@
+{
+  "name": "galaxy-skills",
+  "version": "2026.9.16",
+  "description": "Curated Galaxy skills for coding agents: tool development, user-defined tools, Nextflow-to-Galaxy conversion, collection manipulation, workflow reports, track hubs, hub news posts and Galaxy MCP usage. Mirror of galaxyproject/galaxy-skills.",
+  "author": {
+    "name": "The Galaxy Project"
+  },
+  "homepage": "https://github.com/galaxyproject/galaxy-skills",
+  "repository": "https://github.com/galaxyproject/agentic-plugins",
+  "license": "MIT",
+  "keywords": [
+    "galaxy",
+    "bioinformatics",
+    "skills",
+    "tool-development",
+    "nextflow"
+  ]
+}

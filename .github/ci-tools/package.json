@@ -1,0 +1,9 @@
+{
+  "name": "agentic-plugins-ci-tools",
+  "private": true,
+  "type": "module",
+  "description": "CI-only dependencies (kept out of the root package.json, which is the Pi package manifest)",
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "^0.78.0"
+  }
+}

@@ -4,6 +4,9 @@
 Hand-written fields are preserved; only these are rewritten:
   * plugins/<mirror>/.claude-plugin/plugin.json  -> "skills" (nested skill dirs) and "version"
   * plugins/<mirror>/.codex-plugin/plugin.json   -> "version"
+  * plugins/<mirror>/.cursor-plugin/plugin.json  -> "version"
+  * .cursor-plugin/marketplace.json              -> per-plugin "version"
+  * bundles/claude-desktop/manifest.json         -> "version" (= galaxy-mcp plugin version)
   * .claude-plugin/marketplace.json              -> per-plugin "version"
   * package.json                                 -> "pi.skills" (all skill roots incl. nested) and "version"
 
@@ -52,6 +55,7 @@ def main() -> int:
         pdir = PLUGINS / plugin
         claude = pdir / ".claude-plugin" / "plugin.json"
         codex = pdir / ".codex-plugin" / "plugin.json"
+        cursor = pdir / ".cursor-plugin" / "plugin.json"
         if plugin in MIRRORS:
             version = calver(plugin)
             nested = [f"./skills/{d.as_posix()}" for d in nested_skill_dirs(pdir / "skills")]
@@ -59,21 +63,28 @@ def main() -> int:
             data["version"] = version
             data["skills"] = nested
             dump(claude, data)
-            data = load(codex)
-            data["version"] = version
-            dump(codex, data)
+            for manifest in (codex, cursor):
+                data = load(manifest)
+                data["version"] = version
+                dump(manifest, data)
         else:
             version = load(claude)["version"]
         versions[plugin] = version
         print(f"{plugin}: version {version}")
 
-    # Claude marketplace versions
-    mp_path = ROOT / ".claude-plugin" / "marketplace.json"
-    mp = load(mp_path)
-    for entry in mp["plugins"]:
-        if entry["name"] in versions:
-            entry["version"] = versions[entry["name"]]
-    dump(mp_path, mp)
+    # Claude and Cursor marketplace versions
+    for mp_path in (ROOT / ".claude-plugin" / "marketplace.json", ROOT / ".cursor-plugin" / "marketplace.json"):
+        mp = load(mp_path)
+        for entry in mp["plugins"]:
+            if entry["name"] in versions:
+                entry["version"] = versions[entry["name"]]
+        dump(mp_path, mp)
+
+    # Claude Desktop bundle follows the galaxy-mcp plugin version
+    bundle = ROOT / "bundles" / "claude-desktop" / "manifest.json"
+    data = load(bundle)
+    data["version"] = versions["galaxy-mcp"]
+    dump(bundle, data)
 
     # Pi package: every skill root, nested ones explicitly
     pkg_path = ROOT / "package.json"

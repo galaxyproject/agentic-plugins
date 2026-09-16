@@ -6,22 +6,130 @@ on:
   pull_request:
 
 jobs:
-  validate:
+  structure:
+    name: Structure (validate.py)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Structural checks
-        run: |
-          pip install pyyaml
-          python3 scripts/validate.py
+      - run: pip install pyyaml
+      - run: python3 scripts/validate.py
+      - run: python3 scripts/cursor-deeplink.py --check
+
+  claude-code:
+    name: Claude Code (plugin validate --strict)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Claude Code manifest checks
+      - run: npm install -g @anthropic-ai/claude-code
+      - name: Validate marketplace and plugins
+        env:
+          CLAUDE_CONFIG_DIR: ${{ runner.temp }}/claude-config
         run: |
-          npm install -g @anthropic-ai/claude-code
           claude plugin validate --strict .
           for p in plugins/*/; do claude plugin validate --strict "$p"; done
+
+  codex:
+    name: Codex (headless install + inventory)
+    runs-on: ubuntu-latest
+    env:
+      CODEX_HOME: ${{ github.workspace }}/.codex-home
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: npm install -g @openai/codex && codex --version
+      - name: Codex plugin-creator validator (galaxy-mcp, foundry-skills)
+        run: |
+          pip install pyyaml
+          curl -fsSL -o /tmp/validate_plugin.py \
+            https://raw.githubusercontent.com/openai/codex/main/codex-rs/skills/src/assets/samples/plugin-creator/scripts/validate_plugin.py
+          python3 /tmp/validate_plugin.py plugins/galaxy-mcp
+          python3 /tmp/validate_plugin.py plugins/foundry-skills
+          # galaxy-skills fails only on an upstream frontmatter bug (galaxyproject/galaxy-skills#36); report, don't fail
+          python3 /tmp/validate_plugin.py plugins/galaxy-skills || echo "::warning::galaxy-skills: Codex validator reports upstream frontmatter issue"
+      - name: Install from this checkout as a local marketplace
+        run: |
+          mkdir -p "$CODEX_HOME"
+          codex plugin marketplace add "$GITHUB_WORKSPACE"
+          for p in galaxy-mcp galaxy-skills foundry-skills; do codex plugin add "$p@galaxyproject"; done
+      - name: MCP server registered with forwarded env
+        run: |
+          codex mcp list | tee /tmp/mcp.txt
+          grep -E '^galaxy +uvx +galaxy-mcp' /tmp/mcp.txt
+      - name: Skills visible in the model prompt (no auth needed)
+        run: |
+          git init -q /tmp/ws && cd /tmp/ws
+          codex debug prompt-input "hello" > /tmp/prompt.json
+          n=$(grep -oE '(galaxy-skills|foundry-skills|galaxy-mcp):[a-z0-9-]+' /tmp/prompt.json | sort -u | wc -l)
+          echo "skills in prompt: $n"
+          test "$n" -ge 70
+          for s in galaxy-mcp:galaxy-connect galaxy-skills:tool-dev galaxy-skills:nf-process-to-galaxy-tool foundry-skills:discover-shed-tool; do
+            grep -q "$s" /tmp/prompt.json || { echo "missing $s"; exit 1; }
+          done
+
+  antigravity:
+    name: Antigravity (agy plugin validate)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install agy
+        run: |
+          curl -fsSL https://antigravity.google/cli/install.sh | bash
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - run: for p in plugins/*/; do agy plugin validate "$p"; done
+
+  pi:
+    name: Pi (skill loader)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: cd .github/ci-tools && npm install --no-audit --no-fund
+      - run: cd .github/ci-tools && node check-pi-skills.mjs "$GITHUB_WORKSPACE"
+
+  mcp-smoke:
+    name: galaxy-mcp starts (uvx and Claude Desktop bundle)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: uvx galaxy-mcp
+        run: python3 scripts/mcp_smoke.py uvx galaxy-mcp
+      - name: Bundle entry point (uv run)
+        run: python3 scripts/mcp_smoke.py uv run --directory bundles/claude-desktop src/server.py
+      - name: Live Galaxy check (only when GALAXY_API_KEY secret is set)
+        if: ${{ env.GALAXY_API_KEY != '' }}
+        env:
+          GALAXY_URL: ${{ vars.GALAXY_URL || 'https://usegalaxy.org' }}
+          GALAXY_API_KEY: ${{ secrets.GALAXY_API_KEY }}
+        run: python3 scripts/mcp_smoke.py --live uvx galaxy-mcp
+
+  claude-desktop-bundle:
+    name: Claude Desktop bundle (mcpb validate + pack)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npx -y @anthropic-ai/mcpb validate bundles/claude-desktop/manifest.json
+      - run: mkdir -p dist && npx -y @anthropic-ai/mcpb pack bundles/claude-desktop dist/galaxy-mcp.mcpb
+      - uses: actions/upload-artifact@v4
+        with:
+          name: galaxy-mcp.mcpb
+          path: dist/galaxy-mcp.mcpb

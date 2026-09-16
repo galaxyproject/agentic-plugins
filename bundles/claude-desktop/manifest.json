@@ -1,0 +1,106 @@
+{
+  "manifest_version": "0.4",
+  "name": "galaxy-mcp",
+  "display_name": "Galaxy",
+  "version": "0.1.0",
+  "description": "Connect Claude to your Galaxy server: histories, datasets, tools and workflows.",
+  "long_description": "Gives Claude Desktop access to a Galaxy server through the galaxy-mcp server. Claude can list and create histories, upload and inspect datasets, search and run Galaxy tools, import and invoke workflows (including IWC workflows), and check job status. You need an account on a Galaxy server (for example usegalaxy.org, usegalaxy.eu or usegalaxy.org.au) and an API key from User > Preferences > Manage API Key.",
+  "author": {
+    "name": "The Galaxy Project",
+    "url": "https://galaxyproject.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/galaxyproject/agentic-plugins.git"
+  },
+  "homepage": "https://galaxyproject.org",
+  "documentation": "https://github.com/galaxyproject/agentic-plugins/blob/main/docs/claude-desktop.md",
+  "support": "https://github.com/galaxyproject/agentic-plugins/issues",
+  "server": {
+    "type": "uv",
+    "entry_point": "src/server.py",
+    "mcp_config": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "${__dirname}",
+        "src/server.py"
+      ],
+      "env": {
+        "GALAXY_URL": "${user_config.galaxy_url}",
+        "GALAXY_API_KEY": "${user_config.galaxy_api_key}"
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "get_user",
+      "description": "Show the Galaxy user the server is connected as"
+    },
+    {
+      "name": "get_histories",
+      "description": "List your Galaxy histories"
+    },
+    {
+      "name": "get_history_contents",
+      "description": "List datasets in a history"
+    },
+    {
+      "name": "upload_file",
+      "description": "Upload a local file to a history"
+    },
+    {
+      "name": "search_tools_by_name",
+      "description": "Find Galaxy tools by name"
+    },
+    {
+      "name": "run_tool",
+      "description": "Run a Galaxy tool with given inputs"
+    },
+    {
+      "name": "search_iwc_workflows",
+      "description": "Search the IWC workflow collection"
+    },
+    {
+      "name": "invoke_workflow",
+      "description": "Run a workflow on a history"
+    }
+  ],
+  "tools_generated": true,
+  "keywords": [
+    "galaxy",
+    "bioinformatics",
+    "genomics",
+    "workflows",
+    "science"
+  ],
+  "license": "MIT",
+  "compatibility": {
+    "claude_desktop": ">=1.0.0",
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
+    "runtimes": {
+      "python": ">=3.10"
+    }
+  },
+  "user_config": {
+    "galaxy_url": {
+      "type": "string",
+      "title": "Galaxy URL",
+      "description": "Base URL of your Galaxy server, e.g. https://usegalaxy.org",
+      "default": "https://usegalaxy.org",
+      "required": true
+    },
+    "galaxy_api_key": {
+      "type": "string",
+      "title": "Galaxy API key",
+      "description": "From the Galaxy web UI: User > Preferences > Manage API Key",
+      "sensitive": true,
+      "required": true
+    }
+  }
+}

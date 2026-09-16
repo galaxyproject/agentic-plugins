@@ -1,0 +1,48 @@
+{
+  "name": "galaxyproject",
+  "owner": {
+    "name": "The Galaxy Project"
+  },
+  "metadata": {
+    "description": "Galaxy Project plugins for Cursor: the galaxy-mcp server plus curated Galaxy skills."
+  },
+  "plugins": [
+    {
+      "name": "galaxy-mcp",
+      "source": "plugins/galaxy-mcp",
+      "description": "Galaxy MCP server (uvx galaxy-mcp) reading GALAXY_URL and GALAXY_API_KEY from your environment, plus the galaxy-connect setup skill.",
+      "version": "0.1.0",
+      "category": "Developer Tools",
+      "keywords": [
+        "galaxy",
+        "bioinformatics",
+        "mcp"
+      ]
+    },
+    {
+      "name": "galaxy-skills",
+      "source": "plugins/galaxy-skills",
+      "description": "Curated Galaxy developer skills mirrored from galaxyproject/galaxy-skills.",
+      "version": "2026.9.16",
+      "category": "Developer Tools",
+      "keywords": [
+        "galaxy",
+        "bioinformatics",
+        "skills"
+      ]
+    },
+    {
+      "name": "foundry-skills",
+      "source": "plugins/foundry-skills",
+      "description": "Galaxy Workflow Foundry cast skills mirrored from galaxyproject/foundry.",
+      "version": "2026.9.16",
+      "category": "Developer Tools",
+      "keywords": [
+        "galaxy",
+        "workflows",
+        "foundry",
+        "skills"
+      ]
+    }
+  ]
+}
