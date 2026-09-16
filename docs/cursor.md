@@ -113,3 +113,19 @@ Reinstall the plugins from **Customize** after the repository updates, or
   error.
 - **"Provided API key is not valid"**: the key belongs to a different server or
   was revoked.
+
+## For maintainers: marketplace listing
+
+Importing the repository from **Customize** works today. Listing in the public
+[Cursor Marketplace](https://cursor.com/marketplace) is a manual submission at
+[cursor.com/marketplace/publish](https://cursor.com/marketplace/publish), to
+be done once the repository lives under `galaxyproject`. Cursor's checklist,
+and where this repo stands:
+
+- valid `.cursor-plugin/plugin.json` in each plugin, unique kebab-case names: yes
+- `description` on every plugin: yes
+- components with valid frontmatter: yes (one upstream skill has a YAML issue, galaxyproject/galaxy-skills#36)
+- logo committed and referenced by relative path: `assets/logo.svg`
+- `README.md` documents usage and configuration: this file and the root README
+- multi-plugin repo with `.cursor-plugin/marketplace.json` at the root: yes
+- tested locally in `~/.cursor/plugins/local/`: **not yet**; do this before submitting

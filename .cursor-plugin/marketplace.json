@@ -17,7 +17,8 @@
         "galaxy",
         "bioinformatics",
         "mcp"
-      ]
+      ],
+      "logo": "assets/logo.svg"
     },
     {
       "name": "galaxy-skills",
@@ -29,7 +30,8 @@
         "galaxy",
         "bioinformatics",
         "skills"
-      ]
+      ],
+      "logo": "assets/logo.svg"
     },
     {
       "name": "foundry-skills",
@@ -42,7 +44,8 @@
         "workflows",
         "foundry",
         "skills"
-      ]
+      ],
+      "logo": "assets/logo.svg"
     }
   ]
 }

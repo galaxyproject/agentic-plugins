@@ -102,5 +102,6 @@
       "sensitive": true,
       "required": true
     }
-  }
+  },
+  "icon": "icon.png"
 }
