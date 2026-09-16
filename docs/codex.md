@@ -45,7 +45,9 @@ build Galaxy workflows.
 
 ## Verify
 
-1. Run `/mcp` inside Codex; `galaxy` should be listed.
+1. In a terminal, `codex mcp list` shows a `galaxy` server with
+   `GALAXY_URL` and `GALAXY_API_KEY` (masked) and status `enabled`. Inside
+   Codex, `/mcp` lists it too.
 2. Ask: *"Connect to Galaxy and tell me who I am."* Codex calls `get_user` and
    reports your username and the server version.
 
@@ -67,12 +69,17 @@ separately.
 
 ## Update
 
-Re-run the install commands; Codex refreshes the marketplace and reinstalls
-the plugin:
+```bash
+codex plugin marketplace upgrade
+codex plugin add galaxy-skills@galaxyproject
+codex plugin add foundry-skills@galaxyproject
+```
+
+The first command refreshes the marketplace snapshot; re-adding a plugin
+installs the new version. To remove a plugin:
 
 ```bash
-codex plugin marketplace add galaxyproject/agentic-plugins
-codex plugin add galaxy-skills@galaxyproject
+codex plugin remove galaxy-skills@galaxyproject
 ```
 
 ## Alternatives
