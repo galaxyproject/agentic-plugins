@@ -60,7 +60,7 @@ def check_skill(skill_md: Path) -> None:
             yaml.safe_load(fm)
         except Exception as exc:  # noqa: BLE001
             first = str(exc).splitlines()[0]
-            warnings.append(f"{rel}: frontmatter is not strict YAML ({first}); Claude Code and Codex skip such skills. Fix upstream.")
+            warnings.append(f"{rel}: frontmatter is not strict YAML ({first}); Claude Code and Antigravity skip such skills and Codex's plugin validator rejects them. Fix upstream.")
 
 
 def main() -> int:
