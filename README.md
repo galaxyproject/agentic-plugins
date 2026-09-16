@@ -77,6 +77,7 @@ scripts/
   validate.py                     structural checks (run in CI)
   mcp_smoke.py                    starts galaxy-mcp over stdio and checks its tool list
   cursor-deeplink.py              generates / checks the "Add to Cursor" link in docs
+  export-hub.py                   renders docs/ as Galaxy Hub pages (content/tools/ai-agents/)
 .github/
   ci-tools/                       CI-only npm deps (Pi loader check); not part of the Pi package
   workflows/validate.yml          per-harness CI jobs (see Testing)
@@ -141,7 +142,10 @@ python3 scripts/validate.py                   # what CI runs
 ```
 
 Only `plugins/galaxy-mcp/`, `docs/` and the hand-written manifest fields are
-edited here; changes to skill content belong upstream. A GitHub Action runs
+edited here; changes to skill content belong upstream. The Galaxy Hub pages
+under `/tools/ai-agents/` are generated from `docs/` with
+`scripts/export-hub.py <galaxy-hub>/content/tools/ai-agents`; rerun it and
+open a hub pull request after changing a guide. A GitHub Action runs
 the sync every Monday and opens a pull request when anything changed.
 
 ## Related
