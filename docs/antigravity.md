@@ -65,9 +65,9 @@ diagnosing the connection.
 ## Use the skills
 
 Run `/skills` to list them, or type `/` followed by the skill name, for example
-`/tool-dev`, `/udt-authoring`, `/nf-to-galaxy`, `/galaxy-transform-collection`,
-`/galaxy-integration`, `/reproduciblify`, `/pipeline-nextflow-to-galaxy`,
-`/discover-shed-tool`. The agent also picks skills up on its own from your
+`/galaxy-integration`, `/galaxy-mcp-reference`, `/collection-manipulation`,
+`/udt-authoring`, `/reproduciblify`, `/tool-dev`, `/nf-to-galaxy`,
+`/pipeline-nextflow-to-galaxy`, `/discover-shed-tool`. The agent also picks skills up on its own from your
 request.
 
 Antigravity lists only top-level skills. The `nf-to-galaxy` and

@@ -22,7 +22,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PLUGINS = ROOT / "plugins"
-MIRRORS = ["galaxy-skills", "foundry-skills"]
+MIRRORS = ["galaxy-skills", "galaxy-dev-skills", "foundry-skills"]
 ALL_PLUGINS = ["galaxy-mcp", *MIRRORS]
 
 

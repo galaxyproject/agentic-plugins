@@ -1,0 +1,18 @@
+{
+  "name": "galaxy-dev-skills",
+  "version": "2026.9.16",
+  "description": "Galaxy development skills: tool XML wrappers, Nextflow-to-Galaxy conversion, ToolShed revisions in usegalaxy-tools, UCSC track hubs and Galaxy Hub news posts. Mirror of galaxyproject/galaxy-skills (dev-skills/).",
+  "author": {
+    "name": "The Galaxy Project"
+  },
+  "homepage": "https://github.com/galaxyproject/galaxy-skills",
+  "repository": "https://github.com/galaxyproject/agentic-plugins",
+  "license": "MIT",
+  "keywords": [
+    "galaxy",
+    "bioinformatics",
+    "skills",
+    "tool-development",
+    "nextflow"
+  ]
+}

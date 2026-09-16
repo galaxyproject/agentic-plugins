@@ -26,7 +26,7 @@ galaxy-integration/
 │   ├── SKILL.md               # gxy package reference
 │   └── examples/              # Example notebooks
 │
-├── mcp-reference/              # MCP tools reference
+(mcp-reference now lives at ../galaxy-mcp-reference/)
 │   ├── SKILL.md               # Full MCP tools reference
 │   ├── history-access.md      # History/dataset access patterns
 │   └── gotchas.md             # Common pitfalls (keychain, URL slugs)
@@ -41,7 +41,7 @@ galaxy-integration/
 
 - **`SKILL.md`** - Router to sub-skills
 - **`jupyterlite/SKILL.md`** - gxy package for JupyterLite notebooks
-- **`mcp-reference/SKILL.md`** - Complete MCP tools reference
+- **`../galaxy-mcp-reference/SKILL.md`** - Complete MCP tools reference
 - **`galaxy-integration.md`** - Detailed guide (MCP + BioBlend)
 - **`scripts/`** - Automation scripts (galaxy_tool_checker.py)
 - **`examples/`** - Tool checking and workflow testing examples
@@ -156,7 +156,7 @@ Treat the API key like a password. Do not commit it to git.
 
 ## Where This Is Used
 
-- **Nextflow → Galaxy conversions**: see `../nf-to-galaxy/` (the conversion skill points here when MCP is needed)
+- **Nextflow → Galaxy conversions**: see `../../dev-skills/nf-to-galaxy/` (the conversion skill points here when MCP is needed)
 
 See the upstream project for the full API reference:
 - https://github.com/galaxyproject/galaxy-mcp

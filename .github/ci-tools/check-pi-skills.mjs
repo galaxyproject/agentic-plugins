@@ -23,7 +23,7 @@ for (const dir of pkg.pi.skills) {
   }
 }
 console.log(`${seen.size} skills loaded by Pi from ${pkg.pi.skills.length} roots`);
-for (const must of ["galaxy-connect", "tool-dev", "nf-process-to-galaxy-tool", "jupyterlite-galaxy", "discover-shed-tool"]) {
+for (const must of ["galaxy-connect", "collection-manipulation", "udt-authoring", "tool-dev", "nf-process-to-galaxy-tool", "jupyterlite-galaxy", "discover-shed-tool"]) {
   if (!seen.has(must)) { console.log(`MISSING expected skill ${must}`); problems++; }
 }
 if (seen.size < MIN_SKILLS) { console.log(`too few skills (${seen.size} < ${MIN_SKILLS})`); problems++; }

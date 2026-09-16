@@ -60,9 +60,10 @@ through diagnosing the connection.
 
 ## Use the skills
 
-Skills register as `/skill:<name>` commands, for example `/skill:tool-dev`,
-`/skill:udt-authoring`, `/skill:nf-to-galaxy`, `/skill:collection-manipulation`,
-`/skill:galaxy-integration`, `/skill:reproduciblify`,
+Skills register as `/skill:<name>` commands, for example
+`/skill:galaxy-integration`, `/skill:galaxy-mcp-reference`,
+`/skill:collection-manipulation`, `/skill:udt-authoring`,
+`/skill:reproduciblify`, `/skill:tool-dev`, `/skill:nf-to-galaxy`,
 `/skill:pipeline-nextflow-to-galaxy`, `/skill:discover-shed-tool`. The agent
 also loads skills on its own when a request matches a description.
 
