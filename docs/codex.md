@@ -62,10 +62,10 @@ Type `$` or run `/skills` to pick a skill, for example `$tool-dev`,
 `$discover-shed-tool`. Codex also selects skills implicitly from their
 descriptions.
 
-The `nf-to-galaxy` and `galaxy-integration` skills contain sub-skills in
-nested directories (for example `nf-process-to-galaxy-tool`). The parent skill
-links to them, so Codex reads them when needed even if they are not listed
-separately.
+Codex scans plugin skill directories recursively, so the sub-skills nested
+under `nf-to-galaxy` and `galaxy-integration` (for example
+`nf-process-to-galaxy-tool` and `jupyterlite-galaxy`) are listed under their
+own names as well.
 
 ## Update
 

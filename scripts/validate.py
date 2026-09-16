@@ -106,6 +106,10 @@ def main() -> int:
         agy = load(pdir / "plugin.json") or {}
         if agy.get("name") != pdir.name:
             err(f"{rel}/plugin.json: name {agy.get('name')} != directory name")
+        if "agent-plugins.org" in str(agy.get("$schema", "")):
+            # Codex would then treat the root plugin.json as an Agent Plugins manifest and
+            # switch to direct-children skill discovery, hiding nested skills.
+            err(f"{rel}/plugin.json: must not declare an agent-plugins.org $schema")
         codex = load(pdir / ".codex-plugin" / "plugin.json") or {}
         if not re.fullmatch(r"\d+\.\d+\.\d+([-+][0-9A-Za-z.-]+)?", str(codex.get("version"))):
             err(f"{rel}/.codex-plugin/plugin.json: version must be strict semver")
