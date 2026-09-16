@@ -51,12 +51,13 @@ jobs:
       - name: Codex plugin-creator validator (galaxy-mcp, foundry-skills)
         run: |
           pip install pyyaml
-          curl -fsSL -o /tmp/validate_plugin.py \
-            https://raw.githubusercontent.com/openai/codex/main/codex-rs/skills/src/assets/samples/plugin-creator/scripts/validate_plugin.py
-          python3 /tmp/validate_plugin.py plugins/galaxy-mcp
-          python3 /tmp/validate_plugin.py plugins/foundry-skills
+          base=https://raw.githubusercontent.com/openai/codex/main/codex-rs/skills/src/assets/samples/plugin-creator/scripts
+          mkdir -p /tmp/codex-validator
+          for f in validate_plugin.py identifier_validation.py; do curl -fsSL -o /tmp/codex-validator/$f "$base/$f"; done
+          python3 /tmp/codex-validator/validate_plugin.py plugins/galaxy-mcp
+          python3 /tmp/codex-validator/validate_plugin.py plugins/foundry-skills
           # galaxy-skills fails only on an upstream frontmatter bug (galaxyproject/galaxy-skills#36); report, don't fail
-          python3 /tmp/validate_plugin.py plugins/galaxy-skills || echo "::warning::galaxy-skills: Codex validator reports upstream frontmatter issue"
+          python3 /tmp/codex-validator/validate_plugin.py plugins/galaxy-skills || echo "::warning::galaxy-skills: Codex validator reports upstream frontmatter issue"
       - name: Install from this checkout as a local marketplace
         run: |
           mkdir -p "$CODEX_HOME"
@@ -82,6 +83,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5   # agy validate checks that MCP commands (uvx) exist on PATH
       - name: Install agy
         run: |
           curl -fsSL https://antigravity.google/cli/install.sh | bash
