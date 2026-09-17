@@ -47,7 +47,7 @@ How the environment reaches the server depends on the harness:
 
 | Harness | Where credentials come from |
 |---------|-----------------------------|
-| Claude Code (`galaxy-mcp` plugin) | Values entered when the plugin was installed (`userConfig`). Change them under `/plugin manage`, or use `claude mcp add` with `-e` for a manual server. |
+| Claude Code (`galaxy-mcp` plugin) | Values entered when the plugin was installed (`userConfig`). Change them with `/plugin configure galaxy-mcp@galaxyproject`, or use `claude mcp add` with `-e` for a manual server. |
 | Codex CLI | `GALAXY_URL` and `GALAXY_API_KEY` exported in the shell that starts Codex (the plugin forwards exactly these two variables). Or `codex mcp add galaxy --env GALAXY_URL=... --env GALAXY_API_KEY=... -- uvx galaxy-mcp`. |
 | Antigravity (`agy`) | Variables exported in the shell that starts `agy` (the server inherits the environment). Or `agy mcp add --env GALAXY_URL=... --env GALAXY_API_KEY=... galaxy uvx galaxy-mcp`. |
 | Pi (`pi-mcp-adapter`) | Variables exported in the shell that starts `pi`. |
