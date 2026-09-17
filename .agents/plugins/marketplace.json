@@ -29,6 +29,18 @@
       "category": "Developer Tools"
     },
     {
+      "name": "galaxy-dev-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/galaxy-dev-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "foundry-skills",
       "source": {
         "source": "local",

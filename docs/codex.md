@@ -56,11 +56,10 @@ have Codex diagnose the connection.
 
 ## Use the skills
 
-Type `$` or run `/skills` to pick a skill, for example `$tool-dev`,
-`$udt-authoring`, `$nf-to-galaxy`, `$collection-manipulation`,
-`$galaxy-integration`, `$reproduciblify`, `$pipeline-nextflow-to-galaxy`,
-`$discover-shed-tool`. Codex also selects skills implicitly from their
-descriptions.
+Type `$` or run `/skills` to pick a skill, for example `$galaxy-integration`,
+`$galaxy-mcp-reference`, `$collection-manipulation`, `$udt-authoring`,
+`$reproduciblify`, and, if you installed `galaxy-dev-skills`, `$tool-dev` and
+`$nf-to-galaxy`. Codex also selects skills implicitly from their descriptions.
 
 Codex scans plugin skill directories recursively, so the sub-skills nested
 under `nf-to-galaxy` and `galaxy-integration` (for example

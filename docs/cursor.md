@@ -81,10 +81,10 @@ the agent through diagnosing the connection.
 
 ## Use the skills
 
-Type `/` in Agent chat and pick a skill, for example `/tool-dev`,
-`/udt-authoring`, `/nf-to-galaxy`, `/galaxy-transform-collection`,
-`/galaxy-integration`, `/reproduciblify`, `/pipeline-nextflow-to-galaxy`,
-`/discover-shed-tool`. The agent also applies skills on its own when a request
+Type `/` in Agent chat and pick a skill, for example `/galaxy-integration`,
+`/galaxy-mcp-reference`, `/collection-manipulation`, `/udt-authoring`,
+`/reproduciblify`, `/tool-dev`, `/nf-to-galaxy`,
+`/pipeline-nextflow-to-galaxy`, `/discover-shed-tool`. The agent also applies skills on its own when a request
 matches a description. Installed skills are listed under **Customize > Skills**.
 
 ## Skills without the plugins

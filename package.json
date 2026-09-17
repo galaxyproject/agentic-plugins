@@ -20,11 +20,11 @@
       "./plugins/galaxy-mcp/skills",
       "./plugins/galaxy-skills/skills",
       "./plugins/galaxy-skills/skills/galaxy-integration/jupyterlite",
-      "./plugins/galaxy-skills/skills/galaxy-integration/mcp-reference",
-      "./plugins/galaxy-skills/skills/nf-to-galaxy/nf-pipeline-to-galaxy-workflow",
-      "./plugins/galaxy-skills/skills/nf-to-galaxy/nf-process-to-galaxy-tool",
-      "./plugins/galaxy-skills/skills/nf-to-galaxy/nf-subworkflow-to-galaxy-workflow",
-      "./plugins/galaxy-skills/skills/tool-dev/tool-selection-diagram",
+      "./plugins/galaxy-dev-skills/skills",
+      "./plugins/galaxy-dev-skills/skills/nf-to-galaxy/nf-pipeline-to-galaxy-workflow",
+      "./plugins/galaxy-dev-skills/skills/nf-to-galaxy/nf-process-to-galaxy-tool",
+      "./plugins/galaxy-dev-skills/skills/nf-to-galaxy/nf-subworkflow-to-galaxy-workflow",
+      "./plugins/galaxy-dev-skills/skills/tool-dev/tool-selection-diagram",
       "./plugins/foundry-skills/skills"
     ],
     "mcp": "./plugins/galaxy-mcp/mcp/pi.json"

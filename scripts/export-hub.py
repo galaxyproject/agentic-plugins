@@ -93,7 +93,7 @@ Ask in plain language; the agent picks the Galaxy tools:
 - *"Show my recent histories and what's in the latest one."*
 - *"Upload these FASTQ files to a new history called 'run 12' and run FastQC on them."*
 - *"Find an IWC workflow for variant calling on paired-end reads and run it on history X."*
-- *"Convert this Nextflow process into a Galaxy tool wrapper and test it with Planemo."* (uses the `nf-to-galaxy` and `tool-dev` skills)
+- *"Convert this Nextflow process into a Galaxy tool wrapper and test it with Planemo."* (uses the `nf-to-galaxy` and `tool-dev` skills from `galaxy-dev-skills`)
 - *"Build a Galaxy workflow from this paper's methods section."* (uses the Foundry skills)
 
 ## Get help

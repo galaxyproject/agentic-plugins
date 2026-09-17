@@ -1,6 +1,6 @@
 ---
 name: jupyterlite-galaxy
-description: Write JupyterLite notebooks for Galaxy dataset interaction using gxy package
+description: Write JupyterLite notebooks that read and write Galaxy datasets in the browser with the gxy package. Use when the analysis needs custom Python over data already in a history -- plotting, reshaping, ad-hoc inspection -- rather than a Galaxy tool run, or when the user asks for a notebook inside Galaxy.
 user_invocable: true
 ---
 
@@ -18,7 +18,7 @@ import gxy
 ### Download Datasets
 ```python
 # By HID (history item number)
-path = await gxy.get(1)  # single dataset
+path = await gxy.get(1)           # single dataset
 paths = await gxy.get([1, 2, 3])  # multiple
 
 # By name (partial match)
@@ -129,7 +129,7 @@ Before writing notebook code, use Galaxy MCP tools to discover datasets:
 
 ```
 # In Claude Code, use MCP to find dataset IDs:
-mcp__galaxy__get_history_contents(history_id="...")
+get_history_contents(history_id="...")
 
 # Then reference those IDs in notebook code:
 path = await gxy.get("dataset_id_here", identifier_type="id")

@@ -1,7 +1,7 @@
 {
   "name": "galaxy-skills",
   "version": "2026.9.16",
-  "description": "Curated Galaxy skills for coding agents: tool development, user-defined tools, Nextflow-to-Galaxy conversion, collection manipulation, workflow reports, track hubs, hub news posts and Galaxy MCP usage. Mirror of galaxyproject/galaxy-skills.",
+  "description": "Curated Galaxy skills for running an analysis: connecting to a Galaxy server, the MCP tool surface, dataset collections, user-defined tools, workflow reports and turning an ad-hoc history into a reusable workflow. Mirror of galaxyproject/galaxy-skills (skills/).",
   "author": {
     "name": "The Galaxy Project",
     "url": "https://galaxyproject.org"
@@ -13,14 +13,14 @@
     "galaxy",
     "bioinformatics",
     "skills",
-    "tool-development",
-    "nextflow"
+    "collections",
+    "user-defined-tools"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Galaxy Skills",
-    "shortDescription": "Curated Galaxy developer skills",
-    "longDescription": "Skills that teach an agent Galaxy best practices: writing and testing tool wrappers, authoring user-defined tools, converting Nextflow pipelines, manipulating dataset collections, drafting workflow reports and track hubs, and using the Galaxy MCP server. Mirrored from galaxyproject/galaxy-skills.",
+    "shortDescription": "Curated Galaxy skills for running analyses",
+    "longDescription": "Skills that teach an agent to drive a real Galaxy server well: connecting to an instance and choosing a client, the Galaxy MCP tool surface and its pitfalls, structuring dataset collections, authoring user-defined tools when no tool exists, drafting workflow reports, and rebuilding an ad-hoc history as a reusable workflow. Mirrored from galaxyproject/galaxy-skills.",
     "developerName": "The Galaxy Project",
     "category": "Developer Tools",
     "capabilities": [
@@ -29,9 +29,9 @@
     ],
     "websiteURL": "https://galaxyproject.org/",
     "defaultPrompt": [
-      "Update the ncbi-datasets Galaxy tool to the latest version.",
-      "Convert this Nextflow process to a Galaxy tool.",
-      "Filter this Galaxy collection to samples matching a pattern."
+      "Upload these FASTQ files to Galaxy and run FastQC on all of them.",
+      "Filter this Galaxy collection to the samples matching a pattern.",
+      "Turn this messy history into a reusable workflow."
     ]
   }
 }

@@ -23,13 +23,27 @@
     {
       "name": "galaxy-skills",
       "source": "plugins/galaxy-skills",
-      "description": "Curated Galaxy developer skills mirrored from galaxyproject/galaxy-skills.",
+      "description": "Curated Galaxy skills for running analyses -- connection, MCP tool surface, collections, user-defined tools, reports, reproducibility. Mirrors the skills/ tree of galaxyproject/galaxy-skills.",
       "version": "2026.9.16",
       "category": "Developer Tools",
       "keywords": [
         "galaxy",
         "bioinformatics",
         "skills"
+      ],
+      "logo": "assets/logo.svg"
+    },
+    {
+      "name": "galaxy-dev-skills",
+      "source": "plugins/galaxy-dev-skills",
+      "description": "Galaxy development skills -- tool wrappers, Nextflow conversion, ToolShed revisions, track hubs, Hub posts. Mirrors the dev-skills/ tree of galaxyproject/galaxy-skills.",
+      "version": "2026.9.16",
+      "category": "Developer Tools",
+      "keywords": [
+        "galaxy",
+        "bioinformatics",
+        "skills",
+        "tool-development"
       ],
       "logo": "assets/logo.svg"
     },

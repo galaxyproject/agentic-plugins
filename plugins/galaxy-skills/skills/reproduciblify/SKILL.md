@@ -1,6 +1,8 @@
 ---
 name: reproduciblify
 description: Use this skill to "reproduciblify" a Galaxy history — re-execute a real (often messy) analysis as a clean, fully on-graph, collection-structured history and author a Galaxy Notebook that extracts cleanly into a reusable, sample-agnostic workflow. Triggers on "reproduciblify this history", "make this history reproducible/extractable", "rebuild this analysis on-graph", "turn this history into a clean notebook/workflow".
+metadata:
+  surfaces: [loom]
 ---
 
 # Reproduciblify
@@ -38,7 +40,7 @@ Reproduciblify is the act of converting every failing step into a passing one �
 
 ## Required Input
 
-1. **A Galaxy history** (required). Connect via the Galaxy MCP server and inspect it — see `galaxy-integration/mcp-reference/SKILL.md`. The relevant calls: `get_history_contents`, `get_dataset_details` (with preview), `get_job_details` (the job that produced each dataset, including its inputs and tool id).
+1. **A Galaxy history** (required). Connect via the Galaxy MCP server and inspect it — see `../galaxy-mcp-reference/SKILL.md`. The relevant calls: `get_history_contents`, `get_dataset_details` (with preview), `get_job_details` (the job that produced each dataset, including its inputs and tool id).
 2. **A plan / recipe / transcript** (optional but valuable). If the user has the steps that produced the history — a methods note, a chat log, an SI recipe — use it to recover *intent*: which steps were exploratory dead-ends, which outputs mattered, why parameters were chosen. The history shows *what happened*; the recipe helps recover *what was meant*.
 
 ## Workflow
@@ -73,7 +75,7 @@ This plan is the spine of both the rebuilt history and the notebook narrative.
 For every off-graph intrusion from Step 1, the rule is **find superior, create as fallback**:
 
 1. **Find (preferred).** Search for an existing Galaxy tool that performs the computation: `search_tools_by_name`, `search_tools_by_keywords`, `get_tool_panel`, and the IWC manifest. Prefer a well-maintained Tool Shed tool over a bespoke one — it is more reproducible, citable, and recognizable to reviewers.
-2. **Create (fallback).** If no suitable tool exists, build one. Use the `tool-dev` skill (`tool-dev/SKILL.md`) — wrap the script/computation as a proper Galaxy tool with declared inputs, outputs, and a test, and place it per `tool-dev/references/tool-placement.md`.
+2. **Create (fallback).** If no suitable tool exists, build one. Use the `udt-authoring` skill (`../udt-authoring/SKILL.md`) — wrap the script/computation as a User-Defined Tool with declared inputs, outputs, and a pinned container, which keeps the step on-graph without waiting on an admin to install anything.
 
 After this step, **only genuine logical inputs remain as uploads.** Everything else is a tool output.
 
@@ -117,9 +119,9 @@ Before declaring done:
 
 | Situation | Do this |
 |-----------|---------|
-| Derived data was uploaded from outside Galaxy | Find a superior Galaxy tool; create one (`tool-dev`) only as fallback |
+| Derived data was uploaded from outside Galaxy | Find a superior Galaxy tool; author a User-Defined Tool (`udt-authoring`) only as fallback |
 | A figure is a pasted image | Re-emit it from an on-graph plotting tool |
-| A bash/manual reformatting step | Wrap it as a Galaxy tool, or find a native equivalent |
+| A bash/manual reformatting step | Find a native equivalent, or wrap it as a User-Defined Tool |
 | Analysis is one-sample, should be N-sample | Map-over a list collection |
 | Experimental design (condition × replicate) | Nested `list:list` collection — carry design through shape |
 | A step compares two named groups | It's a reduce; if irreducible, **split** into map-over producer + pairwise comparator |
@@ -138,7 +140,7 @@ Before declaring done:
 
 ## See Also
 
-- `galaxy-integration/mcp-reference/SKILL.md` — Galaxy MCP tools (history/dataset/tool/page access, `run_tool`).
-- `collection-manipulation/SKILL.md` — map/reduce restructuring with native collection tools.
-- `tool-dev/SKILL.md` — building a Galaxy tool when no suitable one exists (fallback path).
+- `../galaxy-mcp-reference/SKILL.md` — Galaxy MCP tools (history/dataset/tool/page access, `run_tool`).
+- `../collection-manipulation/SKILL.md` — map/reduce restructuring with native collection tools.
+- `../udt-authoring/SKILL.md` — authoring a User-Defined Tool when no suitable tool exists (fallback path).
 - `references/directives.yml` — Galaxy markdown directive metadata for embedding on-graph artifacts (synced from upstream Galaxy via `make sync-directives`).

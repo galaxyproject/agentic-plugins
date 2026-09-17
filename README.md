@@ -5,9 +5,11 @@ Plugins and setup guides that connect AI coding agents to
 
 1. **A Galaxy connection** through the [galaxy-mcp](https://github.com/galaxyproject/galaxy-mcp)
    MCP server, authenticated with your Galaxy API key.
-2. **Curated Galaxy skills** from [galaxyproject/galaxy-skills](https://github.com/galaxyproject/galaxy-skills)
-   (tool development, user-defined tools, Nextflow conversion, collections,
-   workflow reports, track hubs, hub posts, MCP usage).
+2. **Curated Galaxy skills** from [galaxyproject/galaxy-skills](https://github.com/galaxyproject/galaxy-skills),
+   split the way upstream splits them: skills for *using* Galaxy (MCP tool
+   surface, collections, user-defined tools, workflow reports,
+   reproducibility) and, separately, skills for *building* it (tool wrappers,
+   Nextflow conversion, ToolShed revisions, track hubs, hub posts).
 3. **Galaxy Workflow Foundry skills** from [galaxyproject/foundry](https://github.com/galaxyproject/foundry)
    (papers, Nextflow and CWL to validated Galaxy workflows).
 
@@ -26,7 +28,7 @@ Every guide starts with [getting a Galaxy API key](docs/galaxy-api-key.md).
 
 ## What is in the box
 
-Three plugins live under `plugins/`. Each directory is simultaneously a Claude
+Four plugins live under `plugins/`. Each directory is simultaneously a Claude
 Code plugin (`.claude-plugin/plugin.json`), a Codex plugin
 (`.codex-plugin/plugin.json`), a Cursor plugin (`.cursor-plugin/plugin.json`)
 and an Antigravity plugin (`plugin.json`); the root `package.json` exposes the
@@ -36,12 +38,14 @@ one-click installer for Claude Desktop (MCP server only).
 | Plugin | Contents | Origin |
 |--------|----------|--------|
 | `galaxy-mcp` | MCP server config for `uvx galaxy-mcp` (`mcp/claude.json`, `mcp/pi.json`, `mcp.json` for Cursor, `mcp_config.json` for Antigravity, inline in the Codex manifest) and the `galaxy-connect` skill: set up, verify and troubleshoot the connection | this repo |
-| `galaxy-skills` | 16 skills: `tool-dev`, `udt-authoring`, `nf-to-galaxy` (+3 sub-skills), `collection-manipulation`, `galaxy-integration` (+2 sub-skills), `reproduciblify`, `workflow-reports`, `trackhubs`, `update-usegalaxy-tool`, `hub-news-posts`, `tool-selection-diagram` | mirror of galaxyproject/galaxy-skills |
+| `galaxy-skills` | 7 skills for *using* Galaxy: `galaxy-integration` (+`jupyterlite`), `galaxy-mcp-reference`, `collection-manipulation`, `udt-authoring`, `workflow-reports`, `reproduciblify` | mirror of galaxyproject/galaxy-skills `skills/` |
+| `galaxy-dev-skills` | 9 skills for *building* Galaxy: `tool-dev` (+`tool-selection-diagram`), `nf-to-galaxy` (+3 sub-skills), `update-usegalaxy-tool`, `trackhubs`, `hub-news-posts` | mirror of galaxyproject/galaxy-skills `dev-skills/` |
 | `foundry-skills` | 59 cast skills, e.g. `pipeline-nextflow-to-galaxy`, `discover-shed-tool`, `validate-galaxy-workflow`, `author-galaxy-tool-wrapper` | mirror of galaxyproject/foundry `casts/claude/skills` |
 
-Install only the plugins you need. The two skill plugins add many skill
-descriptions to the agent's context; `foundry-skills` in particular is only
-worth it if you build Galaxy workflows.
+Install only the plugins you need. Every skill plugin adds its descriptions to
+the agent's context on every session: `galaxy-skills` is the one an analyst
+wants, `galaxy-dev-skills` is for people who write tool wrappers, and
+`foundry-skills` is only worth it if you build Galaxy workflows.
 
 ### How credentials reach the MCP server
 
@@ -67,7 +71,8 @@ is why the plugin ships one MCP file per harness:
 package.json                      Pi package manifest (pi.skills, pi.mcp)
 plugins/
   galaxy-mcp/                     MCP config + galaxy-connect skill (hand-written)
-  galaxy-skills/                  vendored copy of galaxyproject/galaxy-skills
+  galaxy-skills/                  vendored copy of galaxy-skills skills/ (using Galaxy)
+  galaxy-dev-skills/              vendored copy of galaxy-skills dev-skills/ (building Galaxy)
   foundry-skills/                 vendored copy of galaxyproject/foundry casts/claude/skills
 bundles/claude-desktop/           Claude Desktop .mcpb source (uv runtime, no bundled code)
 docs/                             per-harness guides (source for the Galaxy Hub pages)
@@ -92,7 +97,9 @@ them is documented to follow git submodules (Pi runs a plain `git clone`),
 Claude Code discovers plugin skills only one level deep, Pi stops recursing at a skill root, and Pi can
 only install packages that carry a manifest. Vendoring a plain copy is the one
 layout that works everywhere; `scripts/gen-manifests.py` lists nested skills
-explicitly where a harness needs it. The Antigravity `plugin.json` at each
+explicitly where a harness needs it. Each upstream tree is vendored into its own
+plugin rather than copying the repo root, which keeps upstream's using-vs-building
+split intact instead of registering both trees as one bundle. The Antigravity `plugin.json` at each
 plugin root must never carry an agent-plugins.org `$schema`: Codex and Cursor
 would then read it as an Agent Plugins manifest instead of their own
 (`validate.py` enforces this). The pinned upstream commit is recorded in

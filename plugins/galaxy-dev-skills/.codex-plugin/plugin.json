@@ -1,0 +1,37 @@
+{
+  "name": "galaxy-dev-skills",
+  "version": "2026.9.16",
+  "description": "Galaxy development skills: tool XML wrappers, Nextflow-to-Galaxy conversion, ToolShed revisions in usegalaxy-tools, UCSC track hubs and Galaxy Hub news posts. Mirror of galaxyproject/galaxy-skills (dev-skills/).",
+  "author": {
+    "name": "The Galaxy Project",
+    "url": "https://galaxyproject.org"
+  },
+  "homepage": "https://github.com/galaxyproject/galaxy-skills",
+  "repository": "https://github.com/galaxyproject/agentic-plugins",
+  "license": "MIT",
+  "keywords": [
+    "galaxy",
+    "bioinformatics",
+    "skills",
+    "tool-development",
+    "nextflow"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Galaxy Dev Skills",
+    "shortDescription": "Skills for building Galaxy tools and workflows",
+    "longDescription": "Skills for the work that produces Galaxy itself rather than an analysis: writing and testing tool XML wrappers, converting Nextflow processes and pipelines, adding ToolShed revisions to usegalaxy-tools, publishing UCSC track hubs and writing Galaxy Hub news posts. Mirrored from galaxyproject/galaxy-skills.",
+    "developerName": "The Galaxy Project",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://galaxyproject.org/",
+    "defaultPrompt": [
+      "Update the ncbi-datasets Galaxy tool to the latest version.",
+      "Convert this Nextflow process to a Galaxy tool.",
+      "Add a ToolShed revision for this tool to usegalaxy-tools."
+    ]
+  }
+}

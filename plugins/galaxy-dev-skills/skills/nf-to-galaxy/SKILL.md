@@ -1,6 +1,6 @@
 ---
 name: nf-to-galaxy
-description: Router skill for Nextflow to Galaxy conversions - directs to appropriate sub-skill
+description: "Use when converting Nextflow to Galaxy -- a single process to a Galaxy tool XML, a subworkflow or full pipeline to a Galaxy workflow, or an nf-core module. Routes to the right sub-skill and covers container-to-bioconda mapping and testing the result."
 ---
 
 # Nextflow to Galaxy Conversion (Router)
@@ -82,17 +82,17 @@ For complete pipelines, you are expected to include **bioinformatics best-practi
 
 **New to this skill?** See `README.md` for file organization and navigation.
 
-**Using Galaxy integration?** See `../../galaxy-integration/README.md` and `../../galaxy-integration/galaxy-integration.md`.
+**Using Galaxy integration?** See `../../skills/galaxy-integration/README.md` and `../../skills/galaxy-integration/galaxy-integration.md`.
 
 ---
 
 ## Shared Resources
 
 ### Core Guides
-- **`../../galaxy-integration/galaxy-integration.md`** - Galaxy MCP/BioBlend: setup, tool checking, workflow testing
+- **`../../skills/galaxy-integration/galaxy-integration.md`** - Galaxy MCP/BioBlend: setup, tool checking, workflow testing
 - **`check-tool-availability.md`** - Manual tool checking across repositories
 - **`testing-and-validation.md`** - Routing page to canonical testing docs
-- **`../../tool-dev/references/testing.md`** - Tool testing with Planemo
+- **`../tool-dev/references/testing.md`** - Tool testing with Planemo
 
 ### Tool Discovery Order (Installed vs Available vs Missing)
 

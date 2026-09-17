@@ -59,14 +59,30 @@ PY
 echo "==> galaxy-skills @ $GALAXY_SKILLS_REF"
 clone_ref "$GALAXY_SKILLS_REPO" "$GALAXY_SKILLS_REF" "$TMP/galaxy-skills"
 gs_sha=$(git -C "$TMP/galaxy-skills" rev-parse HEAD)
-dest="$ROOT/plugins/galaxy-skills/skills"
-rm -rf "$dest"; mkdir -p "$dest"
-rsync -a \
-  --exclude .git --exclude .github --exclude .gitignore \
-  --exclude .env.example --exclude Makefile --exclude CONTRIBUTING.md \
-  "$TMP/galaxy-skills/" "$dest/"
-write_upstream "$ROOT/plugins/galaxy-skills/UPSTREAM.json" "$GALAXY_SKILLS_REPO" "$GALAXY_SKILLS_REF" "$gs_sha" "."
-echo "    $gs_sha ($(find "$dest" -name SKILL.md | wc -l | tr -d ' ') skills)"
+
+# Upstream keeps two trees: skills/ is for *using* Galaxy, dev-skills/ is for *building*
+# it, and no harness scans dev-skills/. Each tree becomes its own plugin here so that
+# installing one doesn't drag in the other. Vendoring the repo root instead would bury
+# every skill a level deeper and register both trees as one bundle.
+# vendor_tree <plugin> <upstream subdir>
+vendor_tree() {
+  local plugin=$1 subdir=$2
+  local src="$TMP/galaxy-skills/$subdir" dest="$ROOT/plugins/$plugin/skills"
+  if [ ! -d "$src" ]; then
+    echo "ERROR: upstream has no $subdir/ -- layout changed, see galaxyproject/galaxy-skills#35" >&2
+    exit 1
+  fi
+  rm -rf "$dest"; mkdir -p "$dest"
+  rsync -a "$src/" "$dest/"
+  if [ -f "$TMP/galaxy-skills/LICENSE" ]; then
+    cp "$TMP/galaxy-skills/LICENSE" "$dest/LICENSE"
+  fi
+  write_upstream "$ROOT/plugins/$plugin/UPSTREAM.json" "$GALAXY_SKILLS_REPO" "$GALAXY_SKILLS_REF" "$gs_sha" "$subdir"
+  echo "    $plugin @ $gs_sha ($(find "$dest" -name SKILL.md | wc -l | tr -d ' ') skills)"
+}
+
+vendor_tree galaxy-skills skills
+vendor_tree galaxy-dev-skills dev-skills
 
 echo "==> foundry @ $FOUNDRY_REF ($FOUNDRY_SKILLS_PATH)"
 clone_ref "$FOUNDRY_REPO" "$FOUNDRY_REF" "$TMP/foundry" "/$FOUNDRY_SKILLS_PATH/" "/LICENSE"

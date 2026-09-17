@@ -1,7 +1,7 @@
 {
   "name": "galaxy-skills",
   "version": "2026.9.16",
-  "description": "Curated Galaxy skills for coding agents: tool development, user-defined tools, Nextflow-to-Galaxy conversion, collection manipulation, workflow reports, track hubs, hub news posts and Galaxy MCP usage. Mirror of galaxyproject/galaxy-skills.",
+  "description": "Curated Galaxy skills for running an analysis: connecting to a Galaxy server, the MCP tool surface, dataset collections, user-defined tools, workflow reports and turning an ad-hoc history into a reusable workflow. Mirror of galaxyproject/galaxy-skills (skills/).",
   "author": {
     "name": "The Galaxy Project"
   },
@@ -12,7 +12,7 @@
     "galaxy",
     "bioinformatics",
     "skills",
-    "tool-development",
-    "nextflow"
+    "collections",
+    "user-defined-tools"
   ]
 }
