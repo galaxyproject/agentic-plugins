@@ -55,7 +55,15 @@ jobs:
           base=https://raw.githubusercontent.com/openai/codex/main/codex-rs/skills/src/assets/samples/plugin-creator/scripts
           mkdir -p /tmp/codex-validator
           for f in validate_plugin.py identifier_validation.py; do curl -fsSL -o /tmp/codex-validator/$f "$base/$f"; done
-          for p in plugins/*/; do python3 /tmp/codex-validator/validate_plugin.py "$p"; done
+          # Codex's validator rejects `disable-model-invocation: true`, which upstream sets on
+          # purpose for user-invoked skills (Codex's runtime still loads them). Tolerate only that.
+          rc=0
+          for p in plugins/*/; do
+            out=$(python3 /tmp/codex-validator/validate_plugin.py "$p" 2>&1) || true
+            echo "$out"
+            if echo "$out" | grep -q 'validation failed' && echo "$out" | grep -E '^- ' | grep -vq 'disable-model-invocation'; then rc=1; fi
+          done
+          exit $rc
       - name: Install from this checkout as a local marketplace
         run: |
           mkdir -p "$CODEX_HOME"

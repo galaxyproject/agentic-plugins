@@ -67,8 +67,11 @@ Skills register as `/skill:<name>` commands, for example
 `/skill:pipeline-nextflow-to-galaxy`, `/skill:discover-shed-tool`. The agent
 also loads skills on its own when a request matches a description.
 
-To skip the 59 Foundry skills, use the object form in
-`~/.pi/agent/settings.json` (or `.pi/settings.json`):
+The package carries every skill set: `galaxy-skills` (using Galaxy),
+`galaxy-dev-skills` (tool wrappers, Nextflow conversion, ToolShed, hubs) and
+`foundry-skills` (59 workflow-construction skills). To leave out the sets you
+do not use, filter the package in `~/.pi/agent/settings.json` (or
+`.pi/settings.json`):
 
 ```json
 {
@@ -76,7 +79,7 @@ To skip the 59 Foundry skills, use the object form in
     "npm:pi-mcp-adapter",
     {
       "source": "git:github.com/galaxyproject/agentic-plugins",
-      "skills": ["!plugins/foundry-skills/**"]
+      "skills": ["!plugins/foundry-skills/**", "!plugins/galaxy-dev-skills/**"]
     }
   ]
 }

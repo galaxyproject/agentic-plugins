@@ -1,6 +1,6 @@
 {
   "name": "@galaxyproject/agentic-plugins",
-  "version": "2026.9.16",
+  "version": "2026.9.17",
   "description": "Galaxy MCP server configuration and curated Galaxy skills for Pi and other AI coding agents",
   "keywords": [
     "pi-package",

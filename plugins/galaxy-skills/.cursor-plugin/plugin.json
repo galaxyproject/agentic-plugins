@@ -1,6 +1,6 @@
 {
   "name": "galaxy-skills",
-  "version": "2026.9.16",
+  "version": "2026.9.17",
   "description": "Curated Galaxy skills for running an analysis: connecting to a Galaxy server, the MCP tool surface, dataset collections, user-defined tools, workflow reports and turning an ad-hoc history into a reusable workflow. Mirror of galaxyproject/galaxy-skills (skills/).",
   "author": {
     "name": "The Galaxy Project"

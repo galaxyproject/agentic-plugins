@@ -1,7 +1,7 @@
 {
   "repository": "https://github.com/galaxyproject/galaxy-skills",
-  "ref": "add-plugin-config",
-  "commit": "7ed78b83fb7a93033964271937b9066038120af3",
+  "ref": "main",
+  "commit": "7eb5a1dd2e3afed412f0cfebaa39236f36695845",
   "path": "skills",
-  "synced_at": "2026-09-16T23:53:15Z"
+  "synced_at": "2026-09-17T20:49:30Z"
 }

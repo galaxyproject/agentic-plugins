@@ -24,7 +24,7 @@
       "name": "galaxy-skills",
       "source": "plugins/galaxy-skills",
       "description": "Curated Galaxy skills for running analyses -- connection, MCP tool surface, collections, user-defined tools, reports, reproducibility. Mirrors the skills/ tree of galaxyproject/galaxy-skills.",
-      "version": "2026.9.16",
+      "version": "2026.9.17",
       "category": "Developer Tools",
       "keywords": [
         "galaxy",
@@ -37,7 +37,7 @@
       "name": "galaxy-dev-skills",
       "source": "plugins/galaxy-dev-skills",
       "description": "Galaxy development skills -- tool wrappers, Nextflow conversion, ToolShed revisions, track hubs, Hub posts. Mirrors the dev-skills/ tree of galaxyproject/galaxy-skills.",
-      "version": "2026.9.16",
+      "version": "2026.9.17",
       "category": "Developer Tools",
       "keywords": [
         "galaxy",
@@ -51,7 +51,7 @@
       "name": "foundry-skills",
       "source": "plugins/foundry-skills",
       "description": "Galaxy Workflow Foundry cast skills mirrored from galaxyproject/foundry.",
-      "version": "2026.9.16",
+      "version": "2026.9.17",
       "category": "Developer Tools",
       "keywords": [
         "galaxy",

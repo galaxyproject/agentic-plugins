@@ -33,8 +33,10 @@ the working directory.
 
 1. Open **Customize** in the sidebar, choose **From GitHub Repository**, and
    enter `galaxyproject/agentic-plugins`.
-2. Install `galaxy-mcp`, `galaxy-skills` and, if you build Galaxy workflows,
-   `foundry-skills`, choosing user or project scope.
+2. Install `galaxy-mcp` and `galaxy-skills` (using Galaxy); add
+   `galaxy-dev-skills` if you write tool wrappers or convert pipelines, and
+   `foundry-skills` if you build Galaxy workflows. Choose user or project
+   scope.
 3. Reload the window (**Developer: Reload Window**).
 
 To try the plugins without a marketplace, clone this repository and copy or

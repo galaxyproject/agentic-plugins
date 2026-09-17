@@ -1,6 +1,6 @@
 {
   "name": "foundry-skills",
-  "version": "2026.9.16",
+  "version": "2026.9.17",
   "description": "Galaxy Workflow Foundry cast skills: schema-validated, corpus-grounded steps for turning papers, Nextflow pipelines and CWL workflows into validated Galaxy workflows. Mirror of galaxyproject/foundry (casts/claude/skills).",
   "author": {
     "name": "The Galaxy Project"

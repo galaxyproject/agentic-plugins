@@ -48,9 +48,11 @@ One install gives an agent three things:
 
 1. **A Galaxy connection** through the [galaxy-mcp](https://github.com/galaxyproject/galaxy-mcp)
    server, authenticated with your Galaxy API key.
-2. **Curated Galaxy skills** from [galaxy-skills](https://github.com/galaxyproject/galaxy-skills):
-   tool development, user-defined tools, Nextflow conversion, dataset
-   collections, workflow reports, track hubs, hub posts and MCP usage.
+2. **Curated Galaxy skills** from [galaxy-skills](https://github.com/galaxyproject/galaxy-skills),
+   in two sets: skills for *using* Galaxy (the MCP tool surface, dataset
+   collections, user-defined tools, workflow reports, reproducibility) and,
+   separately, skills for *building* it (tool wrappers, Nextflow conversion,
+   ToolShed revisions, track hubs, hub posts).
 3. **Galaxy Workflow Foundry skills** from [foundry](https://github.com/galaxyproject/foundry):
    turning papers, Nextflow pipelines and CWL workflows into validated Galaxy
    workflows.
@@ -64,7 +66,7 @@ plugin for the agent you already use? See <a href="/tools/orbit/">Orbit</a>.
 
 | Agent | Guide | What you get |
 |-------|-------|--------------|
-| Claude Code | [Set up Claude Code]({HUB_BASE}/claude-code/) | MCP server (prompts for URL and key at install) + skills, via `/plugin` |
+| Claude Code | [Set up Claude Code]({HUB_BASE}/claude-code/) | MCP server (prompts for URL and key at install) + skill sets, via `/plugin` |
 | Claude Desktop | [Set up Claude Desktop]({HUB_BASE}/claude-desktop/) | One-click `.mcpb` bundle; MCP server only |
 | Codex CLI | [Set up Codex]({HUB_BASE}/codex/) | MCP server + skills via `codex plugin` |
 | Cursor | [Set up Cursor]({HUB_BASE}/cursor/) | MCP server + skills via Customize, or a one-click MCP link |
