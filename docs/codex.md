@@ -4,7 +4,10 @@ This page sets up [OpenAI Codex CLI](https://developers.openai.com/codex/cli) wi
 
 - the **galaxy-mcp** server, so Codex can list histories, run tools, upload
   data and invoke workflows on your Galaxy server;
-- **galaxy-skills**, curated Galaxy developer skills;
+- **galaxy-skills**, curated skills for *using* Galaxy (MCP tool surface,
+  collections, user-defined tools, workflow reports, reproducibility);
+- **galaxy-dev-skills**, skills for *building* Galaxy (tool wrappers,
+  Nextflow conversion, ToolShed revisions, track hubs, hub posts);
 - **foundry-skills**, the Galaxy Workflow Foundry's workflow-construction skills.
 
 ## Prerequisites
@@ -75,13 +78,15 @@ own names as well.
 
 ```bash
 codex plugin marketplace upgrade
+codex plugin add galaxy-mcp@galaxyproject
 codex plugin add galaxy-skills@galaxyproject
 codex plugin add galaxy-dev-skills@galaxyproject
 codex plugin add foundry-skills@galaxyproject
 ```
 
 The first command refreshes the marketplace snapshot; re-adding a plugin
-installs the new version. To remove a plugin:
+installs the new version. `galaxy-mcp` reads the credentials from your
+environment, so no re-entry is needed. To remove a plugin:
 
 ```bash
 codex plugin remove galaxy-skills@galaxyproject
@@ -89,23 +94,24 @@ codex plugin remove galaxy-skills@galaxyproject
 
 ## Alternatives
 
-**MCP server without the plugin.**
-
-```bash
-codex mcp add galaxy \
-  --env GALAXY_URL=https://usegalaxy.org \
-  --env GALAXY_API_KEY=paste-your-key-here \
-  -- uvx galaxy-mcp
-```
-
-or, in `~/.codex/config.toml`, forwarding the variables from your shell instead
-of writing the key into the file:
+**MCP server without the plugin.** In `~/.codex/config.toml`, forwarding the
+variables from your shell instead of writing the key into the file:
 
 ```toml
 [mcp_servers.galaxy]
 command = "uvx"
 args = ["galaxy-mcp"]
 env_vars = ["GALAXY_URL", "GALAXY_API_KEY"]
+```
+
+or on the command line, taking the key from the same exported variable; a key
+typed literally here is stored in your shell history:
+
+```bash
+codex mcp add galaxy \
+  --env GALAXY_URL=https://usegalaxy.org \
+  --env GALAXY_API_KEY="$GALAXY_API_KEY" \
+  -- uvx galaxy-mcp
 ```
 
 **Skills straight from upstream.** Codex reads `~/.agents/skills/`, so a clone
@@ -130,7 +136,8 @@ Install either that or `foundry-skills@galaxyproject`, not both.
   `uv --version`.
 - **"Missing Galaxy URL and API key"**: the variables are not exported in the
   shell that started Codex (GUI launchers often do not read `~/.zshrc`). Use a
-  project `.env` file, or `codex mcp add ... --env ...` as above.
+  project `.env` file, or the `~/.codex/config.toml` form above (or
+  `codex mcp add ... --env ...`).
 - **Server fails to start**: run `uvx galaxy-mcp` in a terminal to see the
   error.
 - **"Provided API key is not valid"**: the key belongs to a different server or

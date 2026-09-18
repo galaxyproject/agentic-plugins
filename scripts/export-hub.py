@@ -10,7 +10,8 @@ Writes:
 
 The docs remain the source of truth; rerun after editing them. Links between
 docs become hub URLs, repo-relative links become GitHub URLs, and the H1 is
-replaced by frontmatter.
+replaced by frontmatter. Each page carries `generated_from`, the URL of the
+docs file it was built from.
 """
 from __future__ import annotations
 
@@ -28,22 +29,32 @@ PAGES = {  # docs file -> (hub slug, tease)
     "claude-code.md": ("claude-code", "Install the Galaxy MCP server and skills into Claude Code from the galaxyproject plugin marketplace."),
     "claude-desktop.md": ("claude-desktop", "One-click Galaxy connection for Claude Desktop, no terminal required."),
     "codex.md": ("codex", "Install the Galaxy MCP server and skills into OpenAI Codex CLI."),
-    "cursor.md": ("cursor", "Add the Galaxy MCP server and skills to Cursor, with a one-click link."),
+    # held back from the hub for now; re-enable together with the Cursor scene in galaxy-hub
+    # "cursor.md": ("cursor", "Add the Galaxy MCP server and skills to Cursor, with a one-click link."),
     "antigravity.md": ("antigravity", "Install the Galaxy plugins into Google Antigravity (agy CLI and IDE)."),
     "pi.md": ("pi", "Add the Galaxy MCP server and skills to the Pi coding agent."),
 }
 
 LANDING = f"""---
 title: "Galaxy for AI Coding Agents"
-tease: "Connect Claude Code, Claude Desktop, Codex, Antigravity or Pi to your Galaxy server, and give the agent curated Galaxy skills."
+tease: "Connect Claude Code, Codex, Antigravity or Pi to your Galaxy server with curated Galaxy skills, or Claude Desktop with the Galaxy connection alone."
 subsites: [all]
 components: true
 autotoc: false
 skip_title_render: true
 full_bleed: true
+og_image: /images/galaxy-logos/galaxy_logo_25percent.png
+generated_from: {REPO_URL}/blob/main/scripts/export-hub.py
 ---
 
 <AgentShells />
+
+Galaxy for AI coding agents installs the galaxy-mcp server, the galaxy-skills
+and galaxy-dev-skills sets and the Workflow Foundry skills into Claude Code,
+Codex, Antigravity or Pi; Claude Desktop gets the galaxy-mcp server as a
+one-click bundle. Everything comes from the
+[galaxyproject/agentic-plugins]({REPO_URL})
+repository.
 
 <div class="callout">
 Looking for a complete AI research assistant built around Galaxy rather than a
@@ -62,6 +73,8 @@ there and adding the MCP server by hand with `uvx galaxy-mcp`.
   or [usegalaxy.org.au](https://usegalaxy.org.au)) and its API key.
 - **[uv](https://docs.astral.sh/uv/)** on your `PATH` for every harness except
   Claude Desktop; the MCP server runs as `uvx galaxy-mcp`.
+- **`git`** for the Antigravity install and **Node.js** for Pi; each guide lists
+  its own prerequisites.
 - An API key gives full access to your account. Keep it in configuration or an
   environment variable, not in chat.
 
@@ -87,7 +100,7 @@ Ask in plain language; the agent picks the Galaxy tools:
 """
 
 
-def convert(md: str, slug: str, tease: str) -> str:
+def convert(md: str, slug: str, tease: str, src: str) -> str:
     lines = md.splitlines()
     assert lines[0].startswith("# "), f"{slug}: expected H1 first"
     title = lines[0][2:].strip()
@@ -95,11 +108,14 @@ def convert(md: str, slug: str, tease: str) -> str:
     # drop repo-internal sections (build/submission notes) from the hub copy
     body = re.sub(r"\n## For maintainers[^\n]*\n.*?(?=\n## |\Z)", "\n", body, flags=re.S).rstrip("\n")
     # links between docs -> hub URLs
-    for src, (dst_slug, _) in PAGES.items():
-        body = body.replace(f"({src})", f"({HUB_BASE}/{dst_slug}/)")
+    for doc, (dst_slug, _) in PAGES.items():
+        body = body.replace(f"({doc})", f"({HUB_BASE}/{dst_slug}/)")
     # repo-relative links (../plugins/..., bundles/...) -> GitHub
     body = re.sub(r"\]\((?:\.\./)+([^)]+)\)", rf"]({REPO_URL}/blob/main/\1)", body)
-    fm = f'---\ntitle: "{title}"\ntease: "{tease}"\nsubsites: [all]\nautotoc: true\n---\n\n'
+    fm = (
+        f'---\ntitle: "{title}"\ntease: "{tease}"\nsubsites: [all]\nautotoc: false\n'
+        f'generated_from: {REPO_URL}/blob/main/docs/{src}\n---\n\n'
+    )
     return fm + body + "\n"
 
 
@@ -113,7 +129,7 @@ def main() -> int:
     for src, (slug, tease) in PAGES.items():
         page = out / slug
         page.mkdir(exist_ok=True)
-        (page / "index.md").write_text(convert((DOCS / src).read_text(), slug, tease))
+        (page / "index.md").write_text(convert((DOCS / src).read_text(), slug, tease, src))
         print(f"wrote {page / 'index.md'}")
     return 0
 

@@ -5,8 +5,8 @@ This page installs the **galaxy-mcp** server into
 can list your histories, upload and inspect datasets, search and run tools,
 and invoke workflows on your Galaxy server. No terminal needed.
 
-Skills (galaxy-skills, foundry-skills) are for coding agents and do not apply
-to Claude Desktop.
+Skills (galaxy-skills, galaxy-dev-skills, foundry-skills) are for coding
+agents and do not apply to Claude Desktop.
 
 ## Prerequisites
 

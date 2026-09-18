@@ -4,7 +4,10 @@ This page sets up [Cursor](https://cursor.com) with:
 
 - the **galaxy-mcp** server, so the agent can list histories, run tools, upload
   data and invoke workflows on your Galaxy server;
-- **galaxy-skills**, curated Galaxy developer skills;
+- **galaxy-skills**, curated skills for *using* Galaxy (MCP tool surface,
+  collections, user-defined tools, workflow reports, reproducibility);
+- **galaxy-dev-skills**, skills for *building* Galaxy (tool wrappers,
+  Nextflow conversion, ToolShed revisions, track hubs, hub posts);
 - **foundry-skills**, the Galaxy Workflow Foundry's workflow-construction skills.
 
 ## Prerequisites
