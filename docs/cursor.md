@@ -78,8 +78,13 @@ A project config can also point at an env file instead:
 
 1. Open **Customize > MCP**; `galaxy` should show as enabled with its tools
    listed.
-2. Ask the agent: *"Connect to Galaxy and tell me who I am."* It calls
-   `get_user` and reports your username and the server version.
+2. Ask the agent:
+
+   ```
+   Connect to Galaxy and tell me who I am.
+   ```
+
+   It calls `get_user` and reports your username and the server version.
 
 If something is off, run `/galaxy-connect` in the agent chat; that skill walks
 the agent through diagnosing the connection.
