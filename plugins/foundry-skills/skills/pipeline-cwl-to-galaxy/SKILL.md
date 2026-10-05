@@ -1,15 +1,15 @@
 ---
 name: pipeline-cwl-to-galaxy
-description: "Path from a CWL Workflow to a Galaxy gxformat2 workflow — orchestrates the Foundry skills of the CWL → GALAXY pipeline in order, in a per-run working directory."
+description: "Translate a CWL Workflow into a Galaxy gxformat2 workflow, then assemble and run a Galaxy workflow test — orchestrates the Foundry skills of the CWL → GALAXY pipeline in order, in a per-run working directory."
 ---
 
 # pipeline-cwl-to-galaxy
 
-Harness for the **CWL → GALAXY** Foundry pipeline. Runs the constituent skills in order inside a single per-run working directory. Assembled from `content/pipelines/cwl-to-galaxy/index.md` (revision 2) — regenerate with `foundry-build assemble-pipeline cwl-to-galaxy` if the pipeline changes; do not hand-edit.
+Harness for the **CWL → GALAXY** Foundry pipeline. Runs the constituent skills in order inside a single per-run working directory. Assembled from `content/pipelines/cwl-to-galaxy/index.md` (revision 4) — regenerate with `foundry-build assemble-pipeline cwl-to-galaxy` if the pipeline changes; do not hand-edit.
 
 ## When To Use
 
-- Path from a CWL Workflow to a Galaxy gxformat2 workflow. Lighter upstream extraction.
+- Translate a CWL Workflow into a Galaxy gxformat2 workflow, then assemble and run a Galaxy workflow test.
 
 ## Bootstrap (install these CLIs first)
 
@@ -27,12 +27,12 @@ Install the harness CLIs every constituent skill invokes before driving the pipe
   Ephemeral run: `npx --package @galaxy-foundry/gxwf-foundry foundry`.
   Check: `foundry --help`.
   Docs: https://github.com/galaxyproject/foundry/blob/main/packages/gxwf-foundry/README.md
-- **`galaxy-tool-cache`** (galaxy-tool-cache). `npm install -g '@galaxy-tool-util/cli@^1.8.1'`.
-  Ephemeral run: `npx --yes --package @galaxy-tool-util/cli@1.8.1 galaxy-tool-cache`.
+- **`galaxy-tool-cache`** (galaxy-tool-cache). `npm install -g '@galaxy-tool-util/cli@^1.13.1'`.
+  Ephemeral run: `npx --yes --package @galaxy-tool-util/cli@1.13.1 galaxy-tool-cache`.
   Check: `galaxy-tool-cache --help | grep -q summarize`.
   Docs: https://github.com/jmchilton/galaxy-tool-util-ts/tree/main/packages/cli
-- **`gxwf`** (gxwf). `npm install -g '@galaxy-tool-util/cli@^1.8.1'`.
-  Ephemeral run: `npx --yes --package @galaxy-tool-util/cli@1.8.1 gxwf`.
+- **`gxwf`** (gxwf). `npm install -g '@galaxy-tool-util/cli@^1.13.1'`.
+  Ephemeral run: `npx --yes --package @galaxy-tool-util/cli@1.13.1 gxwf`.
   Check: `gxwf --help | grep -q draft-validate`.
   Docs: https://github.com/jmchilton/galaxy-tool-util-ts/tree/main/packages/cli
 - **`planemo`** (planemo). `uv tool install planemo==0.75.47` (or `pip install planemo==0.75.47`).
