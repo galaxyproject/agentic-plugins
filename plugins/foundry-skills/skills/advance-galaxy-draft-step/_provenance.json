@@ -4,11 +4,11 @@
   "mold": {
     "name": "advance-galaxy-draft-step",
     "path": "content/molds/advance-galaxy-draft-step/index.md",
-    "revision": 7,
-    "content_hash": "ae19f7e5f5ac9434e31302efd88bb5f5db484caf0145951dd27dfe19247f2ea9",
-    "commit": "215b0a4c80c752a9eef2801d46accc4acce88af2"
+    "revision": 11,
+    "content_hash": "677bb3288b4b88a5c4d66c878318c4d46bdc15f9ebcb01698ade2100a70ea835",
+    "commit": "e2c26d735ea338046c61917fcf7627a7f1dc462e"
   },
-  "cast_at": "2026-09-17T11:40:06.540Z",
+  "cast_at": "2026-11-06T18:57:25.897Z",
   "refs": [
     {
       "kind": "cli-command",
@@ -91,6 +91,22 @@
       "source": "deterministic"
     },
     {
+      "kind": "cli-command",
+      "mode": "sidecar",
+      "ref": "[[summarize]]",
+      "src": "content/cli/galaxy-tool-cache/summarize.md",
+      "dst": "references/cli/summarize.json",
+      "used_at": "runtime",
+      "load": "on-demand",
+      "evidence": "corpus-observed",
+      "purpose": "Regenerate the [[galaxy-tool-summary]] for a pin reused from a sibling step, from the populated cache, without re-running discovery.",
+      "trigger": "In step 3, when step 2 reused a sibling's `tool_id`/`tool_version` and no summary file for that pin is at hand.",
+      "verification": "Cast the skill, reuse a sibling pin on an IWC-derived draft, confirm summarize --output writes a manifest that validates against galaxy-tool-summary.",
+      "src_hash": "96099b98e52244ac882066511a8ffa87c1fbbd6fb1c7acc98de3cca822f98277",
+      "dst_hash": "b51364ad4d415f6047e3cf3d3052dea1598cd2197595be66697c9777918b2de7",
+      "source": "deterministic"
+    },
+    {
       "kind": "research",
       "mode": "verbatim",
       "ref": "[[galaxy-tool-job-failure-reference]]",
@@ -101,8 +117,24 @@
       "evidence": "corpus-observed",
       "purpose": "Classify [[draft-validate]] diagnostics against wrapper-defined runtime failure semantics so the iteration routes back to the right authoring surface (implementation vs. wrapper choice).",
       "trigger": "When draft-validate fails after a step has been implemented, or when a selected wrapper has explicit failure semantics that may surface at runtime.",
-      "src_hash": "bf6530fca24f40780836e92d8d263f789038a6e0a722351ab8e8c9aa42646e2c",
-      "dst_hash": "bf6530fca24f40780836e92d8d263f789038a6e0a722351ab8e8c9aa42646e2c",
+      "src_hash": "188511486605e05d6d6ffb555b9c31287a1b6bd94c1f67dd8e483ce258415bfa",
+      "dst_hash": "188511486605e05d6d6ffb555b9c31287a1b6bd94c1f67dd8e483ce258415bfa",
+      "source": "deterministic"
+    },
+    {
+      "kind": "research",
+      "mode": "verbatim",
+      "ref": "[[galaxy-user-tool-workflow-binding]]",
+      "src": "content/research/galaxy-user-tool-workflow-binding/index.md",
+      "dst": "references/notes/galaxy-user-tool-workflow-binding.md",
+      "used_at": "runtime",
+      "load": "on-demand",
+      "evidence": "hypothesis",
+      "purpose": "Pass an authored `GalaxyUserTool` straight to implementation.",
+      "trigger": "When step 2 falls through to [[author-galaxy-tool-wrapper]], or when the draft already contains a step whose `run:` is a `GalaxyUserTool`.",
+      "verification": "Promote after a loop run reaches `draft: false` with an authored tool embedded, and the extracted workflow imports into Galaxy with the tool resolved.",
+      "src_hash": "cfdf62f982349c02cdfa5f3214f3feb9f54cf664b880e438294e5748f9002902",
+      "dst_hash": "cfdf62f982349c02cdfa5f3214f3feb9f54cf664b880e438294e5748f9002902",
       "source": "deterministic"
     },
     {
@@ -114,10 +146,10 @@
       "used_at": "runtime",
       "load": "upfront",
       "evidence": "hypothesis",
-      "purpose": "Read the ledger after each step implementation for a newly appended blocking entry, count the open blocking entries the convergence gate reads, and maintain the topology_repair escalation budget the loop's termination guard depends on.",
-      "verification": "Promote after a run where a blocking entry appended by implement is detected here and drives an escalation that strictly reduces the open count.",
-      "src_hash": "e1d5e3a4d6d650af5b2efc4703fe6f79bb4d0cc12e6cd14e841c5b91df122ea0",
-      "dst_hash": "e1d5e3a4d6d650af5b2efc4703fe6f79bb4d0cc12e6cd14e841c5b91df122ea0",
+      "purpose": "Read the ledger for an open blocking entry against the picked step, or any open blocking entry once no drafty step is left, count the open blocking entries the convergence gate reads, and maintain the topology_repair escalation budget the loop's termination guard depends on.",
+      "verification": "Promote after a run where a blocking entry appended by implement is detected here and drives an escalation that leaves fewer open blocking entries than it found.",
+      "src_hash": "f9076119f5110cd28d3d827a88898e9ada28de4f5db6efefbd9a827cd9971a18",
+      "dst_hash": "f9076119f5110cd28d3d827a88898e9ada28de4f5db6efefbd9a827cd9971a18",
       "source": "deterministic"
     },
     {
@@ -147,8 +179,26 @@
       "purpose": "In/out contract: the draft this Mold reads and mutates one step per iteration conforms to [[galaxy-workflow-draft]]. Cast bundles the JSON Schema alongside the [[draft-validate]] CLI checks.",
       "license": "MIT",
       "license_file": "LICENSES/galaxy-tool-util-ts.LICENSE",
-      "src_hash": "86822b6bf4c11ba1d9eaa12d9e442db7f7d28b2734a2daddf62b5cdd2f1f75aa",
-      "dst_hash": "86822b6bf4c11ba1d9eaa12d9e442db7f7d28b2734a2daddf62b5cdd2f1f75aa",
+      "src_hash": "fd49d477f73427ca85236ba602b6c06bcda65123c98ee7c7eb8fd79b177aebfd",
+      "dst_hash": "fd49d477f73427ca85236ba602b6c06bcda65123c98ee7c7eb8fd79b177aebfd",
+      "source": "deterministic",
+      "license_file_hash": "383450c494c01c466bcf22df102540a39ac89da50563fd7be686ba06772f96b3"
+    },
+    {
+      "kind": "schema",
+      "mode": "verbatim",
+      "ref": "[[parsed-tool]]",
+      "src": "package://@galaxy-tool-util/schema#parsedToolSchema",
+      "dst": "references/schemas/parsed-tool.schema.json",
+      "used_at": "runtime",
+      "load": "on-demand",
+      "evidence": "corpus-observed",
+      "purpose": "Field-level shape of the `ParsedTool` payload under the summary's `parsed_tool`, which [[galaxy-tool-summary]] leaves as a placeholder: port names, datatypes, and a conditional's `whens[]` (`discriminator`, `is_default_when`) in declaration order.",
+      "trigger": "When reading a field of `parsed_tool`, including a conditional's case index or default case.",
+      "license": "MIT",
+      "license_file": "LICENSES/galaxy-tool-util-ts.LICENSE",
+      "src_hash": "3966d0c425e561891113f5c71a2d36a42c00a78cb744bb8970c577b46abcff9b",
+      "dst_hash": "3966d0c425e561891113f5c71a2d36a42c00a78cb744bb8970c577b46abcff9b",
       "source": "deterministic",
       "license_file_hash": "383450c494c01c466bcf22df102540a39ac89da50563fd7be686ba06772f96b3"
     }
@@ -187,7 +237,8 @@
           "freeform-summary-to-galaxy-template",
           "implement-galaxy-tool-step",
           "nextflow-summary-to-galaxy-template",
-          "repair-galaxy-draft-topology"
+          "repair-galaxy-draft-topology",
+          "workflow-brief-to-galaxy-template"
         ]
       },
       {
@@ -210,7 +261,10 @@
           "nextflow-summary-to-galaxy-interface",
           "nextflow-summary-to-galaxy-reference-data",
           "nextflow-summary-to-galaxy-template",
-          "repair-galaxy-draft-topology"
+          "repair-galaxy-draft-topology",
+          "workflow-brief-to-galaxy-data-flow",
+          "workflow-brief-to-galaxy-interface",
+          "workflow-brief-to-galaxy-template"
         ]
       }
     ]
