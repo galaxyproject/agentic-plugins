@@ -6,9 +6,9 @@
     "path": "content/molds/nextflow-summary-to-galaxy-interface/index.md",
     "revision": 6,
     "content_hash": "43966773391578490688098c9333f6eb2eaa94574755f5b6554e7f9b72a605c0",
-    "commit": "d1b4cabede5bc91a5ab8603d5c2d589ad7f0d100"
+    "commit": "61da115975d155a36face0e83d5c28f638da7fca"
   },
-  "cast_at": "2026-09-15T23:16:24.375Z",
+  "cast_at": "2026-11-10T18:57:18.730Z",
   "cast_date": "2026-05-07",
   "cast_revision": 3,
   "cast_history": [
@@ -55,8 +55,8 @@
       "evidence": "corpus-observed",
       "purpose": "Choose stable workflow input/output labels and promoted checkpoint outputs that future tests can address.",
       "trigger": "When deciding labels, public outputs, checkpoint outputs, or fixture-compatible collection inputs.",
-      "src_hash": "81b01801ec3d14810d570dd2d7815da2bb11e41a562af9182c29fd2974f4b855",
-      "dst_hash": "81b01801ec3d14810d570dd2d7815da2bb11e41a562af9182c29fd2974f4b855",
+      "src_hash": "c7dc5421bdd35af8000e61e618c813e162889416a0f322f8d0cb24a66ccad153",
+      "dst_hash": "c7dc5421bdd35af8000e61e618c813e162889416a0f322f8d0cb24a66ccad153",
       "source": "deterministic"
     },
     {
@@ -112,8 +112,8 @@
       "load": "upfront",
       "evidence": "corpus-observed",
       "purpose": "Choose Galaxy File/list/paired/list:paired/list:list interface shapes from Nextflow channel shapes.",
-      "src_hash": "32efd59cc86563b145819cda38f0692bdd3144aac10ae831dc6d8accd9dcda8d",
-      "dst_hash": "32efd59cc86563b145819cda38f0692bdd3144aac10ae831dc6d8accd9dcda8d",
+      "src_hash": "e8d9515c9ae7da29188e8744410d8459e7ee9acd48af550216076fcf7a02b73b",
+      "dst_hash": "e8d9515c9ae7da29188e8744410d8459e7ee9acd48af550216076fcf7a02b73b",
       "source": "deterministic"
     },
     {
@@ -142,8 +142,8 @@
       "evidence": "hypothesis",
       "purpose": "Inherit open entries rather than re-deriving them, close the ones this brief's input, output, and label decisions settle, and append interface obligations the pipeline leaves open — a params entry with no Galaxy input, an emitted-but-unpublished output, a channel shape no collection maps cleanly onto.",
       "verification": "Promote after a worked run shows entries this Mold appends or resolves are consumed downstream without re-derivation.",
-      "src_hash": "e1d5e3a4d6d650af5b2efc4703fe6f79bb4d0cc12e6cd14e841c5b91df122ea0",
-      "dst_hash": "e1d5e3a4d6d650af5b2efc4703fe6f79bb4d0cc12e6cd14e841c5b91df122ea0",
+      "src_hash": "d3d36d558ae5a58de46a0eb869a5f5966be6b02fdb569476e4f77ce1cc1ddf7d",
+      "dst_hash": "d3d36d558ae5a58de46a0eb869a5f5966be6b02fdb569476e4f77ce1cc1ddf7d",
       "source": "deterministic"
     },
     {
@@ -157,8 +157,8 @@
       "evidence": "corpus-observed",
       "purpose": "Read source-level channel, parameter, process, and test-fixture evidence before choosing Galaxy workflow inputs and outputs.",
       "license": "MIT",
-      "src_hash": "839e11b1892af74df3158377027e7d340a67dafdb9b5965d79e9715a1a109d54",
-      "dst_hash": "839e11b1892af74df3158377027e7d340a67dafdb9b5965d79e9715a1a109d54",
+      "src_hash": "1b8872152de9be50634b3ec73cfd5963ae0ec19a95ccb99f6fe734f42656d80d",
+      "dst_hash": "1b8872152de9be50634b3ec73cfd5963ae0ec19a95ccb99f6fe734f42656d80d",
       "source": "deterministic"
     }
   ],
@@ -213,7 +213,10 @@
           "nextflow-summary-to-galaxy-interface",
           "nextflow-summary-to-galaxy-reference-data",
           "nextflow-summary-to-galaxy-template",
-          "repair-galaxy-draft-topology"
+          "repair-galaxy-draft-topology",
+          "workflow-brief-to-galaxy-data-flow",
+          "workflow-brief-to-galaxy-interface",
+          "workflow-brief-to-galaxy-template"
         ]
       }
     ]
