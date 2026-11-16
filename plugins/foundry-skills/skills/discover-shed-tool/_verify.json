@@ -10,6 +10,8 @@
       "validator_bin": "foundry",
       "args": [
         "validate-galaxy-tool-discovery",
+        "--schema-sha256",
+        "0933a77437e523405e72d2b7ceacede6abee6cc51cc4c6da376d939a1439a2ee",
         "{artifact_path}"
       ]
     }

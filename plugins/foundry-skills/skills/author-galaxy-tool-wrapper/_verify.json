@@ -2,6 +2,18 @@
   "verify_schema_version": 1,
   "entries": [
     {
+      "artifact_id": "galaxy-tool-pin",
+      "direction": "input",
+      "kind": "json",
+      "default_filename": "galaxy-tool-pin.json",
+      "schema": "[[galaxy-tool-discovery]]",
+      "validator_bin": "foundry",
+      "args": [
+        "validate-galaxy-tool-discovery",
+        "{artifact_path}"
+      ]
+    },
+    {
       "artifact_id": "summary-nextflow",
       "direction": "input",
       "kind": "json",
@@ -10,6 +22,8 @@
       "validator_bin": "foundry",
       "args": [
         "validate-summary-nextflow",
+        "--schema-sha256",
+        "1b8872152de9be50634b3ec73cfd5963ae0ec19a95ccb99f6fe734f42656d80d",
         "{artifact_path}"
       ]
     }
