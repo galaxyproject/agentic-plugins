@@ -14,7 +14,7 @@ Plugins, skills, and setup guides that connect AI coding agents to
   so your agent can also author and run containerized YAML tools when no
   installed tool fits.)*
 
-Questions, working UDT examples, and beta feedback: **[GitHub Discussions](https://github.com/galaxyproject/galaxy-skills/discussions)**.
+Questions, working UDT examples, and beta feedback: **[GitHub Discussions (`Agents & UDTs`)](https://github.com/galaxyproject/galaxy/discussions/categories/agents-udts)**.
 
 ## Pick your harness
 
