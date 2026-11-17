@@ -1,24 +1,18 @@
 #!/usr/bin/env python3
-"""Export docs/ as the Galaxy Hub page /tools/ai-agents/ (galaxyproject/galaxy-hub).
+"""Export docs/ as the Galaxy Hub page /agents/ (galaxyproject/galaxy-hub).
 
-Usage: scripts/export-hub.py <hub-content-dir>/tools/ai-agents
+Usage: scripts/export-hub.py <hub-content-dir>/agents
 
-Writes ONE page, index.md, that combines:
-  - the landing template below (hero + animated shells via <AgentShells />),
-  - docs/galaxy-api-key.md as the "Get a Galaxy API key" section,
-  - every harness doc as a <HarnessGuide> panel inside <HarnessGuides>,
-plus a redirect stub for each old per-harness URL (<slug>/index.md ->
-/tools/ai-agents/#guide-<slug>) so existing links keep working.
+Writes:
+  - <out>/index.md: single, fast, zero-distraction setup page with the 5
+    harness tabs immediately above the fold (Claude Code, Codex CLI,
+    Antigravity, Claude Desktop, and Pi / Cursor / Other), each rendering a
+    self-contained Step A -> Step B -> Step C checklist;
+  - <out>/plugins/index.md: 301 redirect stub (/agents/plugins/ -> /agents/) so
+    existing links and #guide-<id> hashes land on /agents/.
 
-The docs remain the source of truth; rerun after editing them. Links between
-docs become in-page anchors, repo-relative links become GitHub URLs, each H1 is
-dropped (the panel supplies the title) and section headings are demoted so the
-page outline stays h1 > h2 > h3 > h4. The page carries `generated_from`, and
-each panel links back to the docs file it was built from.
-
-The tab strip on the hub is rendered from the agent-shells scene list, so the
-set of GUIDES here must match `scenes` in galaxy-hub
-(astro/src/components/agent-shells/scenes.ts): same ids, same order.
+The docs remain the source of truth; rerun after editing them. The tab ids in
+GUIDES must match `tabs` in galaxy-hub (astro/src/components/mdx/HarnessGuides.astro).
 """
 from __future__ import annotations
 
@@ -29,27 +23,106 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
 REPO_URL = "https://github.com/galaxyproject/agentic-plugins"
-HUB_BASE = "/tools/ai-agents"
 
-API_KEY_DOC = "galaxy-api-key.md"
-API_KEY_ANCHOR = "#get-a-galaxy-api-key"
-
-GUIDES = [  # (docs file, hub id, display name) — order and ids match scenes.ts
+PRIMARY_GUIDES = [  # (docs file, hub id, display name)
     ("claude-code.md", "claude-code", "Claude Code"),
     ("codex.md", "codex", "Codex CLI"),
     ("antigravity.md", "antigravity", "Antigravity"),
-    ("pi.md", "pi", "Pi"),
     ("claude-desktop.md", "claude-desktop", "Claude Desktop"),
-    # held back from the hub for now; re-enable together with the Cursor scene in galaxy-hub
-    # ("cursor.md", "cursor", "Cursor"),
 ]
 
-# Old per-page slugs that now redirect into the single page.
-REDIRECTS = {"api-key": API_KEY_ANCHOR, **{gid: f"#guide-{gid}" for _, gid, _ in GUIDES}}
+OTHER_PANEL = f"""Connects [Pi](https://pi.dev), [Cursor](https://cursor.com), OpenCode, or any MCP-capable coding agent to Galaxy with `galaxy-mcp` (48 Galaxy tools) and curated `galaxy-skills`.
+
+#### Step A · Get your Galaxy API key, request UDT access, and export credentials
+
+1. **API key:** Log in to [usegalaxy.org](https://usegalaxy.org) (or [usegalaxy.eu](https://usegalaxy.eu), [usegalaxy.org.au](https://usegalaxy.org.au), or your institution's server) → **User › Preferences › Manage API Key** → **Create a new key** → copy it.
+2. **User-Defined Tools beta (UseGalaxy.org):** Submit the 30-second form at **[udt-signup.galaxyproject.org](https://udt-signup.galaxyproject.org/)** with your UseGalaxy.org email *(optional ORCID sign-in speeds review)*. Basic tools and workflows work immediately while we approve UDT access.
+3. **Export credentials:** Add both variables to `~/.zshrc` or `~/.bashrc` (then open a new terminal), or place them in a project `.env` file (gitignored):
+
+   ```bash
+   export GALAXY_URL="https://usegalaxy.org"
+   export GALAXY_API_KEY="paste-your-key-here"
+   ```
+
+#### Step B · Install for your harness
+
+**Needs:** [uv](https://docs.astral.sh/uv/) on your `PATH` (`uv --version`).
+
+<h5 id="pi">Pi (<code>pi</code> 1.x)</h5>
+
+*(Install or upgrade Pi via `npm i -g @earendil-works/pi-coding-agent`.)*
+
+```bash
+pi mcp add galaxy -- uvx galaxy-mcp
+pi install git:github.com/galaxyproject/agentic-plugins
+```
+
+Restart `pi` afterwards (`pi mcp list` checks the connection). *(Full guide: [docs/pi.md]({REPO_URL}/blob/main/docs/pi.md).)*
+
+<h5 id="cursor">Cursor</h5>
+
+1. Open **Customize** in the Cursor sidebar → **From GitHub Repository** → enter `galaxyproject/agentic-plugins`.
+2. Install **`galaxy-mcp`** and **`galaxy-skills`** *(skip `galaxy-dev-skills` and `foundry-skills` unless you build XML wrappers or Foundry workflows)*.
+3. Run **Developer: Reload Window**. *(Full guide + one-click MCP link: [docs/cursor.md]({REPO_URL}/blob/main/docs/cursor.md).)*
+
+<h5 id="generic-mcp">OpenCode or any MCP + Agent Skills client</h5>
+
+Clone the skills into `~/.agents/skills/` and register `uvx galaxy-mcp` in your agent's MCP config:
+
+```bash
+git clone https://github.com/galaxyproject/galaxy-skills ~/.agents/skills/galaxy-skills
+```
+
+```json
+{{
+  "mcpServers": {{
+    "galaxy": {{
+      "command": "uvx",
+      "args": ["galaxy-mcp"],
+      "env": {{
+        "GALAXY_URL": "https://usegalaxy.org",
+        "GALAXY_API_KEY": "paste-your-key-here"
+      }}
+    }}
+  }}
+}}
+```
+
+#### Step C · Verify and run
+
+Ask your agent:
+
+```
+Connect to Galaxy and tell me who I am.
+```
+
+It calls `get_user` and reports your Galaxy username and account details *(troubleshoot anytime with `galaxy-connect`)*. Then ask in plain language — upload FASTQs, run IWC workflows, write in-Galaxy JupyterLite (`gxy`) notebooks, rebuild scratch histories (`reproduciblify`), or author containerized UDTs (`udt-authoring`).
+
+<details>
+<summary>Pi skill filtering (context budget) and updates</summary>
+
+##### Keep only analyst skills in Pi
+
+`pi install` loads all 86 skills across `galaxy-skills`, `galaxy-dev-skills`, and `foundry-skills`. Exclude the developer sets in `~/.pi/agent/settings.json` (or `.pi/settings.json`) to save per-turn context:
+
+```json
+{{
+  "packages": [
+    {{
+      "source": "git:github.com/galaxyproject/agentic-plugins",
+      "skills": ["!plugins/foundry-skills/**", "!plugins/galaxy-dev-skills/**"]
+    }}
+  ]
+}}
+```
+
+Update Pi packages anytime with `pi update --extensions`.
+
+</details>"""
 
 LANDING = f"""---
-title: "Galaxy for AI Coding Agents"
-tease: "Connect Claude Code, Codex, Antigravity or Pi to your Galaxy server with curated Galaxy skills, or add the Galaxy MCP server to Claude Desktop as a one-click bundle."
+title: "Use Galaxy from Your AI Agent"
+tease: "Pick your harness — Claude Code, Codex CLI, Antigravity, Claude Desktop, Pi, or Cursor — and connect to Galaxy in three clear steps (A, B, C)."
 subsites: [all]
 components: true
 autotoc: false
@@ -59,70 +132,58 @@ og_image: /images/galaxy-logos/galaxy_logo_25percent.png
 generated_from: {REPO_URL}/blob/main/scripts/export-hub.py
 ---
 
-<AgentShells />
-
-Galaxy for AI coding agents installs the galaxy-mcp server, the galaxy-skills
-and galaxy-dev-skills sets and the Workflow Foundry skills into Claude Code,
-Codex, Antigravity or Pi; Claude Desktop gets the galaxy-mcp server as a
-one-click bundle. Everything comes from the
-[galaxyproject/agentic-plugins]({REPO_URL})
-repository, and everything you need is on this page: get an API key, then pick
-your harness under [Set up your agent](#set-up-your-agent).
-
-<div class="callout">
-Looking for a complete AI research assistant built around Galaxy rather than a
-plugin for the agent you already use? See <a href="/tools/orbit/">Orbit</a>.
-</div>
-
-## Before you start
-
-- **A Galaxy account** on the server you want to use (for example
-  [usegalaxy.org](https://usegalaxy.org), [usegalaxy.eu](https://usegalaxy.eu)
-  or [usegalaxy.org.au](https://usegalaxy.org.au)) and its API key.
-- **[uv](https://docs.astral.sh/uv/)** on your `PATH` for every harness except
-  Claude Desktop; the MCP server runs as `uvx galaxy-mcp`.
-- **`git`** for the Antigravity install and **Node.js** for Pi; each guide lists
-  its own prerequisites.
-- An API key gives full access to your account. Keep it in configuration or an
-  environment variable, not in chat.
-
-## Get a Galaxy API key
-
-%%API_KEY%%
-
-## Set up your agent
-
-Pick your harness. Each guide covers install, credentials, verification, the
-skills, updates, alternatives and troubleshooting. Other agents that read Agent
-Skills from `~/.agents/skills/` can use the skills by cloning
-[galaxy-skills](https://github.com/galaxyproject/galaxy-skills) there and
-adding the MCP server by hand with `uvx galaxy-mcp`.
-
 <HarnessGuides>
 
 %%GUIDES%%
 
 </HarnessGuides>
 
-## What the agent can do once connected
+<div class="ag-band">
 
-Ask in plain language; the agent picks the Galaxy tools:
+## What your plugins include
 
-- *"Show my recent histories and what's in the latest one."*
-- *"Upload these FASTQ files to a new history called 'run 12' and run FastQC on them."*
-- *"Find an IWC workflow for variant calling on paired-end reads and run it on history X."*
-- *"Convert this Nextflow process into a Galaxy tool wrapper and test it with Planemo."* (uses the `nf-to-galaxy` and `tool-dev` skills from `galaxy-dev-skills`)
-- *"Build a Galaxy workflow from this paper's methods section."* (uses the Foundry skills)
+For everyday data analysis, install **`galaxy-mcp`** + **`galaxy-skills`** only. Add the developer sets only if you build XML tool wrappers or construct workflows, since every installed skill adds its description to each turn's context:
+
+| Plugin | Audience | Contents | Default |
+|--------|----------|----------|---------|
+| **`galaxy-mcp`** | Everyone | Live Galaxy connection (48 MCP tools: histories, datasets, tools, IWC workflows, UDTs) + `galaxy-connect` | **Install** |
+| **`galaxy-skills`** | Analysts & researchers | 7 skills for *using* Galaxy: MCP patterns, collections, in-Galaxy JupyterLite notebooks (`gxy`), UDT authoring, workflow reports, `reproduciblify` | **Install** *(coding agents)* |
+| **`galaxy-dev-skills`** | Tool developers | 9 skills for *building* Galaxy: ToolShed XML wrappers (`tool-dev`), Nextflow conversion (`nf-to-galaxy`), `usegalaxy-tools`, UCSC track hubs, Hub news | Optional |
+| **`foundry-skills`** | Workflow engineers | 69 Workflow Foundry casts turning papers, Nextflow, and CWL into validated Galaxy workflows | Optional |
+
+## More in this section
+
+<div class="ag-examples">
+<div class="ag-example">
+
+**[The Galaxy agentic stack](/agents/stack/)**
+
+See an agent write and run a containerized YAML tool when no installed Galaxy tool fits, with every command, container, and dataset recorded in your history.
+
+</div>
+<div class="ag-example">
+
+**[User-Defined Tools](/tools/user-defined-tools/)**
+
+YAML tool syntax, sandbox model, real examples, and per-account beta access on UseGalaxy.org via [udt-signup.galaxyproject.org](https://udt-signup.galaxyproject.org/).
+
+</div>
+<div class="ag-example">
+
+**[Orbit desktop app (beta)](/agents/orbit/)**
+
+Don't use a coding agent yet? Orbit is a standalone desktop app for macOS, Linux, and Windows with Galaxy and the Galaxy skills already wired in.
+
+</div>
+</div>
 
 ## Get help
 
-- Something not working? The `galaxy-connect` skill that ships with the MCP
-  plugin walks the agent through diagnosing the connection; each guide has a
-  troubleshooting section.
-- Issues and contributions: [galaxyproject/agentic-plugins]({REPO_URL}).
-- Skill content lives upstream in [galaxy-skills](https://github.com/galaxyproject/galaxy-skills)
-  and [foundry](https://github.com/galaxyproject/foundry); the plugins mirror
-  them weekly.
+- **Connection diagnostics:** run `galaxy-connect` in your agent or open the **Manual MCP setup and troubleshooting** drawer in your tab above.
+- **Questions:** [Galaxy Help forum](https://help.galaxyproject.org/).
+- **Plugin & bundle issues:** [galaxyproject/agentic-plugins]({REPO_URL}) (upstream skills: [galaxy-skills](https://github.com/galaxyproject/galaxy-skills) and [foundry](https://github.com/galaxyproject/foundry)).
+
+</div>
 """
 
 
@@ -133,10 +194,10 @@ def body_of(md: str, src: str, shift: int) -> str:
     body = "\n".join(lines[1:]).strip("\n")
     # drop repo-internal sections (build/submission notes) from the hub copy
     body = re.sub(r"\n## For maintainers[^\n]*\n.*?(?=\n## |\Z)", "\n", body, flags=re.S).rstrip("\n")
-    # links between docs -> in-page anchors
-    body = body.replace(f"({API_KEY_DOC})", f"({API_KEY_ANCHOR})")
-    for doc, gid, _ in GUIDES:
+    for doc, gid, _ in PRIMARY_GUIDES:
         body = body.replace(f"({doc})", f"(#guide-{gid})")
+    body = body.replace("(pi.md)", "(#guide-pi)").replace("(cursor.md)", "(#guide-cursor)")
+    body = body.replace("(galaxy-api-key.md)", f"({REPO_URL}/blob/main/docs/galaxy-api-key.md)")
     # repo-relative links (../plugins/..., bundles/...) -> GitHub
     body = re.sub(r"\]\((?:\.\./)+([^)]+)\)", rf"]({REPO_URL}/blob/main/\1)", body)
     # demote headings, but never inside fenced code
@@ -153,14 +214,17 @@ def body_of(md: str, src: str, shift: int) -> str:
 def guide_panel(doc: str, gid: str, name: str) -> str:
     body = body_of((DOCS / doc).read_text(), doc, shift=2)
     source = f"{REPO_URL}/blob/main/docs/{doc}"
-    # blank lines around the body keep MDX parsing it as markdown
     return f'<HarnessGuide id="{gid}" name="{name}" source="{source}">\n\n{body}\n\n</HarnessGuide>'
 
 
+def other_panel() -> str:
+    source = f"{REPO_URL}/tree/main/docs"
+    return f'<HarnessGuide id="other" name="Pi / Cursor / Other" source="{source}">\n\n{OTHER_PANEL}\n\n</HarnessGuide>'
+
+
 def landing() -> str:
-    api_key = body_of((DOCS / API_KEY_DOC).read_text(), API_KEY_DOC, shift=1)
-    guides = "\n\n".join(guide_panel(*g) for g in GUIDES)
-    return LANDING.replace("%%API_KEY%%", api_key).replace("%%GUIDES%%", guides)
+    panels = [guide_panel(*g) for g in PRIMARY_GUIDES] + [other_panel()]
+    return LANDING.replace("%%GUIDES%%", "\n\n".join(panels))
 
 
 def main() -> int:
@@ -170,11 +234,12 @@ def main() -> int:
     out.mkdir(parents=True, exist_ok=True)
     (out / "index.md").write_text(landing())
     print(f"wrote {out / 'index.md'}")
-    for slug, anchor in REDIRECTS.items():
-        page = out / slug
-        page.mkdir(exist_ok=True)
-        (page / "index.md").write_text(f'---\nredirect: "{HUB_BASE}/{anchor}"\n---\n')
-        print(f"wrote {page / 'index.md'} -> {HUB_BASE}/{anchor}")
+    plugins_stub = out / "plugins"
+    plugins_stub.mkdir(exist_ok=True)
+    (plugins_stub / "index.md").write_text(
+        '---\ntitle: "Galaxy for AI Coding Agents"\nredirect: "/agents/"\n---\n'
+    )
+    print(f"wrote {plugins_stub / 'index.md'} -> /agents/")
     return 0
 
 

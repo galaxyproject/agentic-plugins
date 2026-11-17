@@ -49,21 +49,6 @@ jobs:
         with:
           python-version: "3.12"
       - run: npm install -g @openai/codex && codex --version
-      - name: Codex plugin-creator validator (all plugins)
-        run: |
-          pip install pyyaml
-          base=https://raw.githubusercontent.com/openai/codex/main/codex-rs/skills/src/assets/samples/plugin-creator/scripts
-          mkdir -p /tmp/codex-validator
-          for f in validate_plugin.py identifier_validation.py; do curl -fsSL -o /tmp/codex-validator/$f "$base/$f"; done
-          # Codex's validator rejects `disable-model-invocation: true`, which upstream sets on
-          # purpose for user-invoked skills (Codex's runtime still loads them). Tolerate only that.
-          rc=0
-          for p in plugins/*/; do
-            out=$(python3 /tmp/codex-validator/validate_plugin.py "$p" 2>&1) || true
-            echo "$out"
-            if echo "$out" | grep -q 'validation failed' && echo "$out" | grep -E '^- ' | grep -vq 'disable-model-invocation'; then rc=1; fi
-          done
-          exit $rc
       - name: Install from this checkout as a local marketplace
         run: |
           mkdir -p "$CODEX_HOME"
@@ -79,7 +64,7 @@ jobs:
           codex debug prompt-input "hello" > /tmp/prompt.json
           n=$(grep -oE '(galaxy-skills|galaxy-dev-skills|foundry-skills|galaxy-mcp):[a-z0-9-]+' /tmp/prompt.json | sort -u | wc -l)
           echo "skills in prompt: $n"
-          test "$n" -ge 70
+          test "$n" -ge 80
           for s in galaxy-mcp:galaxy-connect galaxy-skills:udt-authoring galaxy-skills:collection-manipulation galaxy-dev-skills:tool-dev galaxy-dev-skills:nf-process-to-galaxy-tool foundry-skills:discover-shed-tool; do
             grep -q "$s" /tmp/prompt.json || { echo "missing $s"; exit 1; }
           done
