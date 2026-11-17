@@ -3,13 +3,13 @@
 Plugins, skills, and setup guides that connect AI coding agents to
 [Galaxy](https://galaxyproject.org) in three steps:
 
-- **Step A — Get a Galaxy API key** ([docs/galaxy-api-key.md](docs/galaxy-api-key.md)):
+- **Step 1 — Get a Galaxy API key** ([docs/galaxy-api-key.md](docs/galaxy-api-key.md)):
   **User › Preferences › Manage API Key** on your Galaxy server (`usegalaxy.org`,
   `usegalaxy.eu`, `usegalaxy.org.au`, or institutional).
-- **Step B — Install for your harness** (table below): add **`galaxy-mcp`** +
+- **Step 2 — Install for your harness** (table below): add **`galaxy-mcp`** +
   **`galaxy-skills`** for everyday analysis (add `galaxy-dev-skills` or
   `foundry-skills` only if you build tools or workflows).
-- **Step C — Verify & run**: ask *"Connect to Galaxy and tell me who I am."*
+- **Step 3 — Verify & run**: ask *"Connect to Galaxy and tell me who I am."*
   *(Optional on `usegalaxy.org`: [request User-Defined Tools beta access](https://udt-signup.galaxyproject.org/)
   so your agent can also author and run containerized YAML tools when no
   installed tool fits.)*
@@ -25,6 +25,7 @@ Questions, working UDT examples, and beta feedback: **[GitHub Discussions (`Agen
 | Antigravity (`agy`) | [docs/antigravity.md](docs/antigravity.md) | `git clone` this repo, then `agy plugin install <clone>/plugins/galaxy-mcp` and `.../galaxy-skills` |
 | Pi | [docs/pi.md](docs/pi.md) | `pi mcp add galaxy -- uvx galaxy-mcp` then `pi install git:github.com/galaxyproject/agentic-plugins` |
 | Cursor | [docs/cursor.md](docs/cursor.md) | **Customize › From GitHub Repository** › `galaxyproject/agentic-plugins` (`galaxy-mcp` + `galaxy-skills`) |
+| Orbit (desktop app) | [docs/orbit.md](docs/orbit.md) | Download from [Orbit releases](https://github.com/galaxyproject/orbit/releases/latest) (`galaxy-mcp` + `galaxy-skills` built in; no terminal) |
 | Claude Desktop | [docs/claude-desktop.md](docs/claude-desktop.md) | Open `galaxy-mcp.mcpb` from the [latest release](https://github.com/galaxyproject/agentic-plugins/releases/latest) (no terminal; MCP server only) |
 
 ## What is in the box
@@ -152,7 +153,7 @@ the sync every Monday and opens a pull request when anything changed.
 - [galaxy-mcp](https://github.com/galaxyproject/galaxy-mcp), the MCP server
 - [galaxy-skills](https://github.com/galaxyproject/galaxy-skills), skill sources
 - [foundry](https://github.com/galaxyproject/foundry), the Workflow Foundry
-- [loom](https://github.com/galaxyproject/loom), Orbit / Pi-based Galaxy research harness
+- [orbit](https://github.com/galaxyproject/orbit), Orbit desktop Galaxy research harness
 
 ## License
 

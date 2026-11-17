@@ -4,7 +4,7 @@ Connects the [Pi](https://pi.dev) coding agent (`@earendil-works/pi-coding-agent
 1.x) to Galaxy with Pi's built-in MCP client (`galaxy-mcp`, 48 Galaxy tools) and
 curated Galaxy skills.
 
-## Step A · Get your Galaxy API key, request UDT access, and export credentials
+## Step 1 · Get your Galaxy API key, request UDT access, and export credentials
 
 1. **API key:** Log in to [usegalaxy.org](https://usegalaxy.org) (or
    [usegalaxy.eu](https://usegalaxy.eu), [usegalaxy.org.au](https://usegalaxy.org.au),
@@ -22,7 +22,7 @@ curated Galaxy skills.
    export GALAXY_API_KEY="paste-your-key-here"
    ```
 
-## Step B · Install in Pi
+## Step 2 · Install in Pi
 
 **Needs:** Pi 1.x (`pi --version`; install/upgrade via
 `npm i -g @earendil-works/pi-coding-agent`) and [uv](https://docs.astral.sh/uv/)
@@ -36,7 +36,7 @@ pi install git:github.com/galaxyproject/agentic-plugins
 **Restart `pi` afterwards.** *(Add `-l` to either command to scope it to `.pi/`
 in your current project instead of `~/.pi/agent/`.)*
 
-## Step C · Verify and run
+## Step 3 · Verify and run
 
 1. Run `pi mcp list` in a terminal (`galaxy: connected, 48 tools`), then inside
    `pi` ask:

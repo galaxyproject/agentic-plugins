@@ -1,64 +1,37 @@
 # Galaxy for Claude Desktop
 
-Connects [Claude Desktop](https://claude.com/download) to Galaxy as a
-**one-click bundle** (48 Galaxy MCP tools: histories, datasets, tools, IWC
-workflows, and User-Defined Tools). **No terminal or Python install required.**
+## Step 1 · Get your Galaxy API key
 
-*(Agent Skills apply only to coding agents — Claude Desktop uses the MCP tools directly.)*
+- **Galaxy API key:** On [usegalaxy.org](https://usegalaxy.org) *(or [usegalaxy.eu](https://usegalaxy.eu) / [usegalaxy.org.au](https://usegalaxy.org.au))*, open **User › Preferences › Manage API Key** → **Create a new key**.
+- **Custom tools on UseGalaxy.org *(optional)*:** Request [User-Defined Tools beta access](https://udt-signup.galaxyproject.org/) (~30s). Standard tools work immediately while we approve.
 
-## Step A · Get your Galaxy API key and request UDT access
+## Step 2 · Open the one-click bundle
 
-1. **API key:** Log in to [usegalaxy.org](https://usegalaxy.org) (or
-   [usegalaxy.eu](https://usegalaxy.eu), [usegalaxy.org.au](https://usegalaxy.org.au),
-   or your institution's server) → **User › Preferences › Manage API Key** →
-   **Create a new key** → copy it. *(Keep it out of chat; Claude Desktop stores
-   it in your system keychain in Step B.)*
-2. **User-Defined Tools beta (UseGalaxy.org):** Submit the 30-second form at
-   **[udt-signup.galaxyproject.org](https://udt-signup.galaxyproject.org/)**
-   with your UseGalaxy.org email *(optional ORCID sign-in speeds review)*. Basic
-   tools and workflows work immediately; once approved, Claude can also create
-   and run custom containerized tools (`create_user_tool` / `run_user_tool`).
+No terminal or Python install required *(connects the 48 Galaxy MCP tools directly)*:
 
-## Step B · Install the one-click bundle
+1. Download **`galaxy-mcp.mcpb`** from the **[latest release](https://github.com/galaxyproject/agentic-plugins/releases/latest)** and double-click it *(or drag onto [Claude Desktop](https://claude.com/download))*.
+2. Enter your **Galaxy URL** (default `https://usegalaxy.org`, no `/api`) and **Galaxy API key**, then click **Install** *(first start takes ~30–60s)*.
 
-1. Download **`galaxy-mcp.mcpb`** from the
-   [latest release](https://github.com/galaxyproject/agentic-plugins/releases/latest)
-   and double-click it (or drag onto Claude Desktop / **Settings › Extensions ›
-   Advanced settings › Install Extension…**).
-2. In the install dialog, fill in **Galaxy URL** (default `https://usegalaxy.org`,
-   no `/api`) and **Galaxy API key**, then click **Install**. *(First start takes
-   ~30–60 seconds while Claude Desktop's built-in runtime downloads `galaxy-mcp`.)*
+## Step 3 · Verify and run
 
-## Step C · Verify and run
-
-Start a new chat and ask:
+Open a new chat and ask:
 
 ```
 Connect to Galaxy and tell me who I am.
 ```
 
-Claude calls `get_user` and reports your Galaxy username and account details.
-Then ask it to inspect histories, upload datasets, launch IWC workflows, or
-author and run User-Defined Tools.
+Claude calls `get_user` and confirms your account. Then ask it to inspect histories, upload datasets, launch IWC workflows, or create and run containerized YAML tools.
 
 <details>
-<summary>Reconfigure, update, manual setup, and troubleshooting</summary>
+<summary>Reconfigure, update, manual JSON config & troubleshooting</summary>
 
-### Change the Galaxy URL or API key
+### Reconfigure or update
 
-Open **Settings › Extensions › Galaxy › Configure**, update your values, and
-start a new chat.
+Update credentials under **Settings › Extensions › Galaxy › Configure**. Upgrade anytime by opening a newer `galaxy-mcp.mcpb` from [Releases](https://github.com/galaxyproject/agentic-plugins/releases/latest).
 
-### Update
+### Manual `claude_desktop_config.json` (without `.mcpb`)
 
-Download the newest `galaxy-mcp.mcpb` from the
-[releases page](https://github.com/galaxyproject/agentic-plugins/releases/latest)
-and open it — Claude Desktop upgrades in place and keeps your credentials.
-
-### Manual config (without `.mcpb` bundle)
-
-Requires [uv](https://docs.astral.sh/uv/) on your `PATH`. Add to
-`claude_desktop_config.json` (**Settings › Developer › Edit Config**):
+Requires [uv](https://docs.astral.sh/uv/) (`Settings › Developer › Edit Config`):
 
 ```json
 {
@@ -75,22 +48,16 @@ Requires [uv](https://docs.astral.sh/uv/) on your `PATH`. Add to
 }
 ```
 
-### Troubleshooting
-
-- **Extension error right after install**: check **Settings › Extensions › Galaxy** logs; first launch requires network access to download Python and `galaxy-mcp`.
-- **"Missing Galaxy URL and API key"**: open **Settings › Extensions › Galaxy › Configure** and fill both fields.
-- **"Provided API key is not valid"**: key belongs to a different Galaxy server or was revoked; generate a fresh key and update **Configure**.
-- **Slow first tool call**: `galaxy-mcp` starts on demand; subsequent calls are fast.
+- **Startup error:** check **Settings › Extensions › Galaxy** logs; first launch requires internet access to download `galaxy-mcp`.
+- **Invalid API key:** keys are per Galaxy server; generate a key on the matching server and update **Configure**.
 
 </details>
 
 ## For maintainers
 
-The bundle source is `bundles/claude-desktop/`. CI validates and packs it on
-every push and attaches `galaxy-mcp.mcpb` to tagged releases:
+The bundle source is `bundles/claude-desktop/`. CI validates and packs it on every push and attaches `galaxy-mcp.mcpb` to tagged releases:
 
 ```bash
-npx @anthropic-ai/mcpb validate bundles/claude-desktop/manifest.json
-npx @anthropic-ai/mcpb pack bundles/claude-desktop dist/galaxy-mcp.mcpb
-python3 scripts/mcp_smoke.py uv run --directory bundles/claude-desktop src/server.py
+npx --yes @anthropic-ai/mcpb validate bundles/claude-desktop
+npx --yes @anthropic-ai/mcpb pack bundles/claude-desktop dist/galaxy-mcp.mcpb
 ```
