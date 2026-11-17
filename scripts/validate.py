@@ -192,7 +192,7 @@ def main() -> int:
         ROOT / "package.json", ROOT / ".claude-plugin" / "marketplace.json",
         ROOT / ".cursor-plugin" / "marketplace.json", ROOT / "bundles" / "claude-desktop" / "manifest.json",
         *ROOT.glob("plugins/*/.claude-plugin/plugin.json"), *ROOT.glob("plugins/*/.codex-plugin/plugin.json"),
-        *ROOT.glob("plugins/*/.cursor-plugin/plugin.json"),
+        *ROOT.glob("plugins/*/.cursor-plugin/plugin.json"), *ROOT.glob("plugins/*/plugin.json"),
     ]}
     subprocess.run([sys.executable, str(ROOT / "scripts" / "gen-manifests.py")], check=True, capture_output=True)
     for p, text in before.items():

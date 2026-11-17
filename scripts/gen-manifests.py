@@ -56,6 +56,7 @@ def main() -> int:
         claude = pdir / ".claude-plugin" / "plugin.json"
         codex = pdir / ".codex-plugin" / "plugin.json"
         cursor = pdir / ".cursor-plugin" / "plugin.json"
+        agy = pdir / "plugin.json"
         if plugin in MIRRORS:
             version = calver(plugin)
             nested = [f"./skills/{d.as_posix()}" for d in nested_skill_dirs(pdir / "skills")]
@@ -63,12 +64,15 @@ def main() -> int:
             data["version"] = version
             data["skills"] = nested
             dump(claude, data)
-            for manifest in (codex, cursor):
+            for manifest in (codex, cursor, agy):
                 data = load(manifest)
                 data["version"] = version
                 dump(manifest, data)
         else:
             version = load(claude)["version"]
+            data = load(agy)
+            data["version"] = version
+            dump(agy, data)
         versions[plugin] = version
         print(f"{plugin}: version {version}")
 

@@ -1,106 +1,94 @@
 # Galaxy for Codex CLI
 
-This page sets up [OpenAI Codex CLI](https://developers.openai.com/codex/cli) with:
+Connects [OpenAI Codex CLI](https://developers.openai.com/codex/cli) to Galaxy
+with the `galaxy-mcp` server (48 Galaxy tools) and curated `galaxy-skills`.
 
-- the **galaxy-mcp** server, so Codex can list histories, run tools, upload
-  data and invoke workflows on your Galaxy server;
-- **galaxy-skills**, curated skills for *using* Galaxy (MCP tool surface,
-  collections, user-defined tools, workflow reports, reproducibility);
-- **galaxy-dev-skills**, skills for *building* Galaxy (tool wrappers,
-  Nextflow conversion, ToolShed revisions, track hubs, hub posts);
-- **foundry-skills**, the Galaxy Workflow Foundry's workflow-construction skills.
+## Step A · Get your Galaxy API key, request UDT access, and export credentials
 
-## Prerequisites
+1. **API key:** Log in to [usegalaxy.org](https://usegalaxy.org) (or
+   [usegalaxy.eu](https://usegalaxy.eu), [usegalaxy.org.au](https://usegalaxy.org.au),
+   or your institution's server) → **User › Preferences › Manage API Key** →
+   **Create a new key** → copy it.
+2. **User-Defined Tools beta (UseGalaxy.org):** Submit the 30-second form at
+   **[udt-signup.galaxyproject.org](https://udt-signup.galaxyproject.org/)**
+   with your UseGalaxy.org email *(optional ORCID sign-in speeds review)*. Basic
+   tools and workflows work immediately while we approve UDT access.
+3. **Export credentials:** Codex forwards `GALAXY_URL` (no `/api`) and
+   `GALAXY_API_KEY` from your shell. Add both to `~/.zshrc` or `~/.bashrc` (then
+   open a new terminal), or place them in a project `.env` file (gitignored):
 
-- Codex CLI with plugin support (`codex --version`).
-- [uv](https://docs.astral.sh/uv/) on your `PATH`; the MCP server runs as
-  `uvx galaxy-mcp`.
-- A Galaxy API key. See [Getting a Galaxy API key](galaxy-api-key.md).
+   ```bash
+   export GALAXY_URL="https://usegalaxy.org"
+   export GALAXY_API_KEY="paste-your-key-here"
+   ```
 
-## Set the credentials
+## Step B · Install in Codex CLI
 
-Codex starts MCP servers with a minimal environment and forwards only the
-variables a server asks for. The `galaxy-mcp` plugin asks for `GALAXY_URL` and
-`GALAXY_API_KEY`, so export them in the shell that launches Codex (for example
-in `~/.zshrc` or `~/.bashrc`):
-
-```bash
-export GALAXY_URL="https://usegalaxy.org"
-export GALAXY_API_KEY="paste-your-key-here"
-```
-
-A `.env` file with the same two lines in your project directory also works.
-
-## Install
+**Needs:** Codex CLI (`codex --version`) and [uv](https://docs.astral.sh/uv/) on
+your `PATH` (`uv --version`).
 
 ```bash
 codex plugin marketplace add galaxyproject/agentic-plugins
 codex plugin add galaxy-mcp@galaxyproject
 codex plugin add galaxy-skills@galaxyproject
+```
+
+**Start a new `codex` session afterwards.**
+
+Building Galaxy XML wrappers or Workflow Foundry casts? Add only what you need
+(every installed skill adds to per-turn context):
+
+```bash
 codex plugin add galaxy-dev-skills@galaxyproject
 codex plugin add foundry-skills@galaxyproject
 ```
 
-Start a new Codex session afterwards. You can also browse and toggle the
-plugins with `codex /plugins`.
+## Step C · Verify and run
 
-Install only what you need. `galaxy-skills` is the set for *using* Galaxy
-(MCP tool surface, collections, user-defined tools, workflow reports,
-reproducibility); `galaxy-dev-skills` is for *building* it (tool wrappers,
-Nextflow conversion, ToolShed revisions, track hubs, hub posts);
-`foundry-skills` adds 59 workflow-construction skills. Every installed skill
-costs context on every turn, so skip the sets you will not use.
-
-## Verify
-
-1. In a terminal, `codex mcp list` shows a `galaxy` server with
-   `GALAXY_URL` and `GALAXY_API_KEY` (masked) and status `enabled`. Inside
-   Codex, `/mcp` lists it too.
-2. Ask:
+1. Run `codex mcp list` (or `/mcp` inside Codex — `galaxy` shows `enabled`),
+   then ask:
 
    ```
    Connect to Galaxy and tell me who I am.
    ```
 
-   Codex calls `get_user` and reports your username and the server version.
+   Approve the MCP tool prompt on first use — Codex calls `get_user` and reports
+   your Galaxy username and account details. *(If anything fails, type
+   `$galaxy-connect`.)*
+2. Ask in plain language — upload FASTQs, run IWC workflows, write in-Galaxy
+   JupyterLite (`gxy`) notebooks, rebuild scratch histories (`$reproduciblify`),
+   or author containerized UDTs (`$udt-authoring`).
 
-If something is off, type `$galaxy-connect` (or pick it from `/skills`) to
-have Codex diagnose the connection.
+<details>
+<summary>Skills, updates, and removing plugins</summary>
 
-## Use the skills
+### Use the skills
 
-Type `$` or run `/skills` to pick a skill, for example `$galaxy-integration`,
-`$galaxy-mcp-reference`, `$collection-manipulation`, `$udt-authoring`,
-`$reproduciblify`, and, if you installed `galaxy-dev-skills`, `$tool-dev` and
-`$nf-to-galaxy`. Codex also selects skills implicitly from their descriptions.
+Codex picks skills automatically from your prompt, or you can invoke them with
+`$` (or `/skills`): `$galaxy-connect`, `$galaxy-integration`,
+`$jupyterlite-galaxy`, `$galaxy-mcp-reference`, `$collection-manipulation`,
+`$udt-authoring`, `$workflow-reports`, `$reproduciblify` (plus `$tool-dev` and
+`$nf-to-galaxy` if `galaxy-dev-skills` is installed).
 
-Codex scans plugin skill directories recursively, so the sub-skills nested
-under `nf-to-galaxy` and `galaxy-integration` (for example
-`nf-process-to-galaxy-tool` and `jupyterlite-galaxy`) are listed under their
-own names as well.
-
-## Update
+### Update or remove
 
 ```bash
 codex plugin marketplace upgrade
 codex plugin add galaxy-mcp@galaxyproject
 codex plugin add galaxy-skills@galaxyproject
-codex plugin add galaxy-dev-skills@galaxyproject
-codex plugin add foundry-skills@galaxyproject
 ```
 
-The first command refreshes the marketplace snapshot; re-adding a plugin
-installs the new version. `galaxy-mcp` reads the credentials from your
-environment, so no re-entry is needed. To remove a plugin:
+Remove any plugin with `codex plugin remove <name>@galaxyproject`.
 
-```bash
-codex plugin remove galaxy-skills@galaxyproject
-```
+</details>
 
-## Alternatives
+<details>
+<summary>Manual MCP setup and troubleshooting</summary>
 
-**MCP server without the plugin.** In `~/.codex/config.toml`, forwarding the
-variables from your shell instead of writing the key into the file:
+### Register `galaxy-mcp` without the plugin
+
+Add to `~/.codex/config.toml` (forwards variables from your shell without writing
+your key to disk):
 
 ```toml
 [mcp_servers.galaxy]
@@ -109,41 +97,11 @@ args = ["galaxy-mcp"]
 env_vars = ["GALAXY_URL", "GALAXY_API_KEY"]
 ```
 
-or on the command line, taking the key from the same exported variable; a key
-typed literally here is stored in your shell history:
+### Troubleshooting
 
-```bash
-codex mcp add galaxy \
-  --env GALAXY_URL=https://usegalaxy.org \
-  --env GALAXY_API_KEY="$GALAXY_API_KEY" \
-  -- uvx galaxy-mcp
-```
+- **No `galaxy` server in `/mcp`**: start a new Codex session; verify `uv --version`.
+- **"Missing Galaxy URL and API key"**: variables were not exported in the shell that launched Codex (common with GUI launchers). Put `GALAXY_URL` and `GALAXY_API_KEY` in a project `.env` file or export them before running `codex`.
+- **Server fails to start**: run `uvx galaxy-mcp` in a terminal to see the underlying error.
+- **"Provided API key is not valid"**: the key belongs to a different Galaxy server or was revoked.
 
-**Skills straight from upstream.** Codex reads `~/.agents/skills/`, so a clone
-works for galaxy-skills:
-
-```bash
-git clone https://github.com/galaxyproject/galaxy-skills ~/.agents/skills/galaxy-skills
-```
-
-Foundry publishes its own Codex marketplace:
-
-```bash
-codex plugin marketplace add galaxyproject/foundry
-codex plugin add foundry-skills@galaxy-workflow-foundry
-```
-
-Install either that or `foundry-skills@galaxyproject`, not both.
-
-## Troubleshooting
-
-- **No `galaxy` server in `/mcp`**: start a new session after installing; check
-  `uv --version`.
-- **"Missing Galaxy URL and API key"**: the variables are not exported in the
-  shell that started Codex (GUI launchers often do not read `~/.zshrc`). Use a
-  project `.env` file, or the `~/.codex/config.toml` form above (or
-  `codex mcp add ... --env ...`).
-- **Server fails to start**: run `uvx galaxy-mcp` in a terminal to see the
-  error.
-- **"Provided API key is not valid"**: the key belongs to a different server or
-  was revoked.
+</details>

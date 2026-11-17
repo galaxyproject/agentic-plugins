@@ -1,136 +1,110 @@
 # Galaxy for Claude Code
 
-This page sets up [Claude Code](https://code.claude.com) with:
+Connects [Claude Code](https://code.claude.com) to Galaxy with the `galaxy-mcp`
+server (48 Galaxy tools) and curated `galaxy-skills`.
 
-- the **galaxy-mcp** server, so Claude can list histories, run tools, upload
-  data and invoke workflows on your Galaxy server;
-- **galaxy-skills**, curated skills for *using* Galaxy (MCP tool surface,
-  collections, user-defined tools, workflow reports, reproducibility);
-- **galaxy-dev-skills**, skills for *building* Galaxy (tool wrappers,
-  Nextflow conversion, ToolShed revisions, track hubs, hub posts);
-- **foundry-skills**, the Galaxy Workflow Foundry's workflow-construction skills.
+## Step A · Get your Galaxy API key and request UDT access
 
-## Prerequisites
+1. **API key:** Log in to [usegalaxy.org](https://usegalaxy.org) (or
+   [usegalaxy.eu](https://usegalaxy.eu), [usegalaxy.org.au](https://usegalaxy.org.au),
+   or your institution's server) → **User › Preferences › Manage API Key** →
+   **Create a new key** → copy it. *(Keep it out of chat; Claude Code saves it in
+   your system keychain in Step B.)*
+2. **User-Defined Tools beta (UseGalaxy.org):** Submit the 30-second form at
+   **[udt-signup.galaxyproject.org](https://udt-signup.galaxyproject.org/)**
+   with your UseGalaxy.org email *(optional ORCID sign-in speeds review)*. All
+   installed Galaxy tools and workflows work immediately; once approved, Claude
+   can also write and run custom containerized YAML tools (`create_user_tool` /
+   `run_user_tool`).
 
-- Claude Code, a current release (`claude --version`).
-- [uv](https://docs.astral.sh/uv/) on your `PATH`; the MCP server runs as
-  `uvx galaxy-mcp`.
-- A Galaxy API key. See [Getting a Galaxy API key](galaxy-api-key.md).
+## Step B · Install in Claude Code
 
-## Install
+**Needs:** Claude Code (`claude --version`) and [uv](https://docs.astral.sh/uv/)
+on your `PATH` (`uv --version`).
 
-Inside Claude Code:
+Run inside Claude Code:
 
 ```
 /plugin marketplace add galaxyproject/agentic-plugins
 /plugin install galaxy-mcp@galaxyproject
 /plugin install galaxy-skills@galaxyproject
+```
+
+Installing `galaxy-mcp` prompts for your **Galaxy URL** (default
+`https://usegalaxy.org`, no `/api`) and **API key**. **Start a new Claude Code
+session afterwards.**
+
+Building Galaxy XML wrappers or Workflow Foundry casts? Add only what you need
+(every installed skill adds its description to each turn's context):
+
+```
 /plugin install galaxy-dev-skills@galaxyproject
 /plugin install foundry-skills@galaxyproject
 ```
 
-Installing `galaxy-mcp` prompts for the **Galaxy URL** (default
-`https://usegalaxy.org`) and your **API key**. The key is stored in your
-system keychain, the URL in your user settings. Start a new session afterwards.
+## Step C · Verify and run
 
-The same works from a terminal:
-
-```bash
-claude plugin marketplace add galaxyproject/agentic-plugins
-claude plugin install galaxy-mcp@galaxyproject
-claude plugin install galaxy-skills@galaxyproject
-claude plugin install galaxy-dev-skills@galaxyproject
-claude plugin install foundry-skills@galaxyproject
-```
-
-Install only what you need. `galaxy-skills` is the set for *using* Galaxy
-(MCP tool surface, collections, user-defined tools, workflow reports,
-reproducibility); `galaxy-dev-skills` is for *building* it (tool wrappers,
-Nextflow conversion, ToolShed revisions, track hubs, hub posts);
-`foundry-skills` adds 59 workflow-construction skills. Every installed skill
-costs context on every turn, so skip the sets you will not use.
-
-## Verify
-
-1. Run `/mcp`. A `galaxy` server should be listed under the `galaxy-mcp` plugin
-   and connected.
-2. Ask:
+1. Run `/mcp` (`galaxy` shows **connected**), then ask:
 
    ```
    Connect to Galaxy and tell me who I am.
    ```
 
-   Claude calls `get_user` and reports your username and the server version.
+   Claude calls `get_user` and reports your Galaxy username and account details.
+   *(If anything fails, run `/galaxy-mcp:galaxy-connect`.)*
+2. Ask for real work in plain language — uploading FASTQs, running IWC
+   workflows, writing in-Galaxy JupyterLite (`gxy`) notebooks, rebuilding
+   scratch histories (`reproduciblify`), or authoring containerized UDTs.
 
-If something is off, run `/galaxy-mcp:galaxy-connect`; that skill walks Claude
-through diagnosing the connection.
+<details>
+<summary>Skills, terminal install, updates, and reconfiguration</summary>
 
-## Use the skills
+### Invoke skills directly or in plain language
 
-Type `/` to see them. Plugin skills are namespaced, for example:
+Claude picks skills automatically from your prompt, or you can invoke them with `/`:
 
-| Invocation | What it does |
-|------------|--------------|
-| `/galaxy-mcp:galaxy-connect` | Set up / verify / troubleshoot the Galaxy connection |
-| `/galaxy-skills:galaxy-integration` | Connect to an instance and choose how to drive it |
-| `/galaxy-skills:galaxy-mcp-reference` | The Galaxy MCP tool surface and its pitfalls |
-| `/galaxy-skills:collection-manipulation` | Filter, sort and restructure dataset collections |
-| `/galaxy-skills:udt-authoring` | Author user-defined tools (`GalaxyUserTool` YAML) |
-| `/galaxy-skills:workflow-reports` | Draft workflow report templates |
-| `/galaxy-skills:reproduciblify` | Rebuild a messy history as a clean, extractable analysis |
-| `/galaxy-dev-skills:tool-dev` | Create, test and update Galaxy tool wrappers |
-| `/galaxy-dev-skills:nf-to-galaxy` | Convert Nextflow processes and workflows |
-| `/galaxy-dev-skills:update-usegalaxy-tool` | Add or bump ToolShed revisions in usegalaxy-tools |
-| `/galaxy-dev-skills:trackhubs` | Publish UCSC track hubs and assembly hubs |
-| `/galaxy-dev-skills:hub-news-posts` | Write Galaxy Hub news posts |
-| `/foundry-skills:pipeline-nextflow-to-galaxy` | End-to-end Nextflow to Galaxy workflow conversion |
-| `/foundry-skills:discover-shed-tool` | Find and pin a Tool Shed wrapper |
+| Command | Purpose |
+|---------|---------|
+| `/galaxy-mcp:galaxy-connect` | Diagnose or verify the Galaxy connection |
+| `/galaxy-skills:galaxy-integration` | Choose between MCP, JupyterLite (`gxy`), and BioBlend scripts |
+| `/galaxy-skills:galaxy-mcp-reference` | Galaxy MCP tool catalog and ID pitfalls |
+| `/galaxy-skills:collection-manipulation` | Filter, sort, relabel, and reshape dataset collections |
+| `/galaxy-skills:udt-authoring` | Author validated `GalaxyUserTool` YAML definitions |
+| `/galaxy-skills:workflow-reports` | Draft Galaxy Workflow Editor report templates |
+| `/galaxy-skills:reproduciblify` | Rebuild a messy history into a clean, workflow-extractable analysis |
+| `/galaxy-dev-skills:tool-dev` | Author and test ToolShed XML wrappers (`galaxy-dev-skills`) |
+| `/galaxy-dev-skills:nf-to-galaxy` | Convert Nextflow modules and pipelines (`galaxy-dev-skills`) |
+| `/foundry-skills:pipeline-nextflow-to-galaxy` | End-to-end Nextflow-to-Galaxy Foundry pipeline (`foundry-skills`) |
 
-Claude also picks skills up on its own from your request; you do not have to
-invoke them by name.
+### Install from a terminal (or headlessly)
 
-## Update
+On Claude Code 2.1.275+, `--marketplace` adds the marketplace automatically
+(export `GALAXY_API_KEY` first so the secret stays out of shell history):
+
+```bash
+claude plugin install galaxy-mcp --marketplace galaxyproject/agentic-plugins \
+  --config galaxy_url=https://usegalaxy.org \
+  --config galaxy_api_key="$GALAXY_API_KEY"
+claude plugin install galaxy-skills@galaxyproject
+```
+
+### Change URL/key or update
+
+Reconfigure anytime with `/plugin configure galaxy-mcp@galaxyproject` (then
+start a new session). Update installed plugins with:
 
 ```
 /plugin marketplace update galaxyproject
 /plugin update galaxy-mcp@galaxyproject
 /plugin update galaxy-skills@galaxyproject
-/plugin update galaxy-dev-skills@galaxyproject
-/plugin update foundry-skills@galaxyproject
 ```
 
-Updating `galaxy-mcp` may prompt again for the Galaxy URL and API key.
+</details>
 
-The skills plugins are versioned by the date they were synced from upstream
-(a date such as `2026.9.17`).
+<details>
+<summary>Manual MCP setup and troubleshooting</summary>
 
-## Change the Galaxy URL or key
-
-Run `/plugin configure galaxy-mcp@galaxyproject` and edit the options, then
-start a new session. From a terminal, the same values can be set
-non-interactively:
-
-```bash
-claude plugin install galaxy-mcp@galaxyproject \
-  --config galaxy_url=https://usegalaxy.org \
-  --config galaxy_api_key="$GALAXY_API_KEY"
-```
-
-Export `GALAXY_API_KEY` first (see
-[Getting a Galaxy API key](galaxy-api-key.md)); a key typed literally on the
-command line is stored in your shell history.
-
-Uninstalling and reinstalling the plugin also prompts again:
-
-```
-/plugin uninstall galaxy-mcp@galaxyproject
-/plugin install galaxy-mcp@galaxyproject
-```
-
-## Alternatives
-
-**MCP server without the plugin.** Register `galaxy-mcp` directly and pass the
-credentials yourself:
+### Register `galaxy-mcp` without the plugin
 
 ```bash
 claude mcp add --scope user galaxy \
@@ -139,36 +113,11 @@ claude mcp add --scope user galaxy \
   -- uvx galaxy-mcp
 ```
 
-Again the key comes from the exported variable (see
-[Getting a Galaxy API key](galaxy-api-key.md)); typing it literally here stores
-it in your shell history.
+### Troubleshooting
 
-**Skills straight from upstream.** Foundry publishes its own marketplace:
+- **No `galaxy` server in `/mcp`**: start a new session after installing; confirm `uv --version` works.
+- **Server fails on first start**: run `uvx galaxy-mcp` in a terminal to inspect the error (first run needs network access to fetch `galaxy-mcp` from PyPI).
+- **"Plugin option galaxy_api_key isn't set"** or **"Missing Galaxy URL and API key"**: run `/plugin configure galaxy-mcp@galaxyproject` and fill in both fields, or place `GALAXY_URL` and `GALAXY_API_KEY` in a project `.env` file.
+- **"Provided API key is not valid"**: keys are per Galaxy server; create or copy the key from the matching server and reconfigure.
 
-```
-/plugin marketplace add galaxyproject/foundry
-/plugin install foundry-skills@galaxy-workflow-foundry
-```
-
-Install either that or `foundry-skills@galaxyproject`, not both, or every
-Foundry skill appears twice. For galaxy-skills, cloning the repository into
-`~/.claude/skills/` also works:
-
-```bash
-git clone https://github.com/galaxyproject/galaxy-skills ~/.claude/skills/galaxy-skills
-```
-
-## Troubleshooting
-
-- **No `galaxy` server in `/mcp`**: start a new session after installing; check
-  `uv --version`.
-- **Server fails to start**: run `uvx galaxy-mcp` in a terminal to see the
-  error. A first run downloads the package and needs network access.
-- **"Plugin option galaxy_api_key isn't set"** (in `/mcp` or the debug log):
-  the install-time prompt was skipped; run
-  `/plugin configure galaxy-mcp@galaxyproject` and fill in the options.
-- **"Missing Galaxy URL and API key"**: the values did not reach the server;
-  check `/plugin configure galaxy-mcp@galaxyproject`, or set `GALAXY_URL` /
-  `GALAXY_API_KEY` in a project `.env` file.
-- **"Provided API key is not valid"**: the key belongs to a different server or
-  was revoked; create a new one and reinstall.
+</details>

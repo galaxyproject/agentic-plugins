@@ -1,111 +1,95 @@
 # Galaxy for Antigravity
 
-This page sets up Google [Antigravity](https://antigravity.google) (the `agy`
-CLI and the IDE, which share `~/.gemini/config/`) with:
+Connects Google [Antigravity](https://antigravity.google) (`agy` CLI and IDE,
+sharing `~/.gemini/config/`) to Galaxy with the `galaxy-mcp` server (48 Galaxy
+tools) and curated `galaxy-skills`.
 
-- the **galaxy-mcp** server, so the agent can list histories, run tools, upload
-  data and invoke workflows on your Galaxy server;
-- **galaxy-skills**, curated skills for *using* Galaxy (MCP tool surface,
-  collections, user-defined tools, workflow reports, reproducibility);
-- **galaxy-dev-skills**, skills for *building* Galaxy (tool wrappers,
-  Nextflow conversion, ToolShed revisions, track hubs, hub posts);
-- **foundry-skills**, the Galaxy Workflow Foundry's workflow-construction skills.
+## Step A · Get your Galaxy API key, request UDT access, and export credentials
 
-## Prerequisites
+1. **API key:** Log in to [usegalaxy.org](https://usegalaxy.org) (or
+   [usegalaxy.eu](https://usegalaxy.eu), [usegalaxy.org.au](https://usegalaxy.org.au),
+   or your institution's server) → **User › Preferences › Manage API Key** →
+   **Create a new key** → copy it.
+2. **User-Defined Tools beta (UseGalaxy.org):** Submit the 30-second form at
+   **[udt-signup.galaxyproject.org](https://udt-signup.galaxyproject.org/)**
+   with your UseGalaxy.org email *(optional ORCID sign-in speeds review)*. Basic
+   tools and workflows work immediately while we approve UDT access.
+3. **Export credentials:** Add both variables to `~/.zshrc` or `~/.bashrc` (then
+   open a new terminal), or place them in a workspace `.env` file (recommended
+   when launching the Antigravity IDE from the Dock, which may not read
+   `~/.zshrc`):
 
-- Antigravity CLI (`agy --version`) or the Antigravity IDE.
-- [uv](https://docs.astral.sh/uv/) on your `PATH`; the MCP server runs as
-  `uvx galaxy-mcp`.
-- `git`.
-- A Galaxy API key. See [Getting a Galaxy API key](galaxy-api-key.md).
+   ```bash
+   export GALAXY_URL="https://usegalaxy.org"
+   export GALAXY_API_KEY="paste-your-key-here"
+   ```
 
-## Set the credentials
+## Step B · Install in Antigravity
 
-Antigravity passes your shell environment to MCP servers, so export the two
-variables in the shell that launches `agy` (for example in `~/.zshrc` or
-`~/.bashrc`):
-
-```bash
-export GALAXY_URL="https://usegalaxy.org"
-export GALAXY_API_KEY="paste-your-key-here"
-```
-
-A `.env` file with the same two lines in your project directory also works.
-`${VAR}` placeholders inside `mcp_config.json` are **not** expanded, so do not
-try to reference the variables from the config file.
-
-## Install
-
-Antigravity plugins are directories. Clone this repository and install the
-plugin directories you want:
+**Needs:** Antigravity (`agy --version` or IDE), [uv](https://docs.astral.sh/uv/)
+on your `PATH`, and `git`.
 
 ```bash
 git clone https://github.com/galaxyproject/agentic-plugins.git ~/.galaxy-agentic-plugins
 agy plugin install ~/.galaxy-agentic-plugins/plugins/galaxy-mcp
 agy plugin install ~/.galaxy-agentic-plugins/plugins/galaxy-skills
+```
+
+**Start a new session afterwards.**
+
+Building Galaxy XML wrappers or Workflow Foundry casts? Add only what you need:
+
+```bash
 agy plugin install ~/.galaxy-agentic-plugins/plugins/galaxy-dev-skills
 agy plugin install ~/.galaxy-agentic-plugins/plugins/foundry-skills
 ```
 
-Each command copies the plugin into `~/.gemini/config/plugins/<name>/`, where
-both the CLI and the IDE discover it. Start a new session afterwards.
+## Step C · Verify and run
 
-Install only what you need. `galaxy-skills` is the set for *using* Galaxy
-(MCP tool surface, collections, user-defined tools, workflow reports,
-reproducibility); `galaxy-dev-skills` is for *building* it (tool wrappers,
-Nextflow conversion, ToolShed revisions, track hubs, hub posts);
-`foundry-skills` adds 59 workflow-construction skills. Every installed skill
-costs context on every turn, so skip the sets you will not use.
-
-To scope a plugin to one workspace instead, copy its directory into
-`<workspace>/.agents/plugins/` rather than running `agy plugin install`.
-
-## Verify
-
-1. Type `/mcp` in the prompt to open the MCP manager; `galaxy-mcp_galaxy`
-   (plugin servers are prefixed with the plugin name) should be running.
-2. Ask:
+1. Type `/mcp` (`galaxy-mcp_galaxy` shows **running**), then ask:
 
    ```
    Connect to Galaxy and tell me who I am.
    ```
 
-   The agent calls `get_user` and reports your username and the server version.
+   The agent calls `get_user` and reports your Galaxy username and account
+   details. *(If anything fails, run `/galaxy-connect`.)*
+2. Ask in plain language — upload FASTQs, run IWC workflows, write in-Galaxy
+   JupyterLite (`gxy`) notebooks, rebuild scratch histories (`/reproduciblify`),
+   or author containerized UDTs (`/udt-authoring`).
 
-If something is off, run `/galaxy-connect`; that skill walks the agent through
-diagnosing the connection.
+<details>
+<summary>Skills, workspace scoping, and updates</summary>
 
-## Use the skills
+### Use the skills
 
-Run `/skills` to list them, or type `/` followed by the skill name, for example
-`/galaxy-integration`, `/galaxy-mcp-reference`, `/collection-manipulation`,
-`/udt-authoring`, `/reproduciblify`, `/tool-dev`, `/nf-to-galaxy`,
-`/pipeline-nextflow-to-galaxy`, `/discover-shed-tool`. The agent also picks skills up on its own from your
-request.
+Run `/skills` or type `/<skill-name>` — `/galaxy-connect`, `/galaxy-integration`,
+`/galaxy-mcp-reference`, `/collection-manipulation`, `/udt-authoring`,
+`/workflow-reports`, `/reproduciblify` (plus `/tool-dev` and `/nf-to-galaxy`
+from `galaxy-dev-skills`). Nested sub-skills such as `jupyterlite-galaxy` are
+loaded automatically through their parent skill.
 
-Antigravity lists only top-level skills. The `nf-to-galaxy` and
-`galaxy-integration` skills contain sub-skills in nested directories (for
-example `nf-process-to-galaxy-tool`); the parent skill links to them, so the
-agent reads them when needed even though they do not appear in `/skills`.
+To scope a plugin to one workspace instead of installing globally, copy its
+folder into `<workspace>/.agents/plugins/`.
 
-## Update
+### Update or remove
 
 ```bash
 git -C ~/.galaxy-agentic-plugins pull
 agy plugin install ~/.galaxy-agentic-plugins/plugins/galaxy-mcp
 agy plugin install ~/.galaxy-agentic-plugins/plugins/galaxy-skills
-agy plugin install ~/.galaxy-agentic-plugins/plugins/galaxy-dev-skills
-agy plugin install ~/.galaxy-agentic-plugins/plugins/foundry-skills
 ```
 
-Reinstalling overwrites the installed copy. `galaxy-mcp` reads the credentials
-from your environment, so no re-entry is needed. `agy plugin list` shows what
-is installed; `agy plugin uninstall <name>` removes a plugin.
+Use `agy plugin list` to inspect installed plugins and `agy plugin uninstall <name>` to remove one.
 
-## Alternatives
+</details>
 
-**MCP server without the plugin.** Register `galaxy-mcp` in your user-level
-`mcp_config.json` with the credentials inline:
+<details>
+<summary>Manual MCP setup and troubleshooting</summary>
+
+### Register `galaxy-mcp` without the plugin
+
+(`${VAR}` placeholders inside `mcp_config.json` are not expanded by Antigravity; pass values via `--env` from an exported shell variable instead, and skip installing the `galaxy-mcp` plugin so the server is not registered twice.)
 
 ```bash
 agy mcp add --env GALAXY_URL=https://usegalaxy.org \
@@ -113,28 +97,11 @@ agy mcp add --env GALAXY_URL=https://usegalaxy.org \
             galaxy uvx galaxy-mcp
 ```
 
-The key comes from the variable exported above; typing it literally here stores
-it in your shell history.
+### Troubleshooting
 
-Then install only the skills plugins, not `galaxy-mcp`, so the server is
-not registered twice.
+- **No `galaxy-mcp_galaxy` in `/mcp`**: start a new session; check `agy plugin list` and `uv --version`.
+- **"Missing Galaxy URL and API key"**: GUI IDE launches often miss `~/.zshrc`; add `GALAXY_URL` and `GALAXY_API_KEY` to a workspace `.env` file or register via `agy mcp add --env` above.
+- **Server fails to start**: run `uvx galaxy-mcp` in a terminal to inspect the error.
+- **"Provided API key is not valid"**: key belongs to a different Galaxy server or was revoked.
 
-**Skills straight from upstream.** Antigravity reads
-`~/.gemini/config/skills/<skill>/SKILL.md`, so the galaxy-skills repository can
-be cloned there; each top-level skill directory becomes a skill:
-
-```bash
-git clone https://github.com/galaxyproject/galaxy-skills ~/.gemini/config/skills/galaxy-skills
-```
-
-## Troubleshooting
-
-- **No `galaxy-mcp_galaxy` in `/mcp`**: start a new session; run
-  `agy plugin list` to confirm the plugin is installed; check `uv --version`.
-- **"Missing Galaxy URL and API key"**: the variables are not exported in the
-  shell that started `agy` (the IDE may not read `~/.zshrc`). Use a project
-  `.env` file, or the `agy mcp add ... --env ...` form above.
-- **Server fails to start**: run `uvx galaxy-mcp` in a terminal to see the
-  error.
-- **"Provided API key is not valid"**: the key belongs to a different server or
-  was revoked.
+</details>

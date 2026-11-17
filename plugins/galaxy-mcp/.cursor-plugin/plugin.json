@@ -9,5 +9,5 @@
   "repository": "https://github.com/galaxyproject/agentic-plugins",
   "license": "MIT",
   "keywords": ["galaxy", "bioinformatics", "mcp"],
-  "mcpServers": "./mcp.json"
+  "mcpServers": "./mcp/cursor.json"
 }
