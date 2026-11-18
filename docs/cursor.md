@@ -3,7 +3,7 @@
 Connects [Cursor](https://cursor.com) to Galaxy with the `galaxy-mcp` server (48
 Galaxy tools) and curated `galaxy-skills`.
 
-## Step A · Get your Galaxy API key, request UDT access, and export credentials
+## Step 1 · Get your Galaxy API key, request UDT access, and export credentials
 
 1. **API key:** Log in to [usegalaxy.org](https://usegalaxy.org) (or
    [usegalaxy.eu](https://usegalaxy.eu), [usegalaxy.org.au](https://usegalaxy.org.au),
@@ -22,7 +22,7 @@ Galaxy tools) and curated `galaxy-skills`.
    export GALAXY_API_KEY="paste-your-key-here"
    ```
 
-## Step B · Install in Cursor
+## Step 2 · Install in Cursor
 
 **Needs:** Cursor with plugin support and [uv](https://docs.astral.sh/uv/) on
 your `PATH` (`uv --version`).
@@ -35,7 +35,7 @@ your `PATH` (`uv --version`).
 
 *(Only want the MCP connection? Click [Add Galaxy to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=galaxy&config=eyJjb21tYW5kIjoidXZ4IiwiYXJncyI6WyJnYWxheHktbWNwIl0sImVudiI6eyJHQUxBWFlfVVJMIjoiJHtlbnY6R0FMQVhZX1VSTH0iLCJHQUxBWFlfQVBJX0tFWSI6IiR7ZW52OkdBTEFYWV9BUElfS0VZfSJ9fQ%3D%3D) to register `galaxy-mcp` in one click using your environment variables.)*
 
-## Step C · Verify and run
+## Step 3 · Verify and run
 
 1. Check **Customize › MCP** (`galaxy` enabled), then ask in Agent chat:
 

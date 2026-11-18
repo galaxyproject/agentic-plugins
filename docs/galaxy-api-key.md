@@ -19,7 +19,7 @@ Keep these two values ready for your agent setup:
 | **Galaxy URL** | `https://usegalaxy.org` | Base server URL only — omit `/api` |
 | **Galaxy API key** | `1a2b3c4d...` | Unique to this server; creating a new key revokes the old one |
 
-How you store these two values depends on your harness in **Step B** below:
+How you store these two values depends on your harness in **Step 2**:
 **Claude Code** and **Claude Desktop** prompt for them at install time and save
 the key in your system keychain; **Codex CLI**, **Antigravity**, and **Pi** read
 `GALAXY_URL` and `GALAXY_API_KEY` from your shell environment or a project
